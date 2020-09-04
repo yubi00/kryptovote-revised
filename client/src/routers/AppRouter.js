@@ -7,6 +7,7 @@ import Candidate from '../components/Candidate'
 import Voter from '../components/Voter'
 import NotFound from '../components/NotFound'
 import CreateElection from '../components/CreateElection'
+import CreateCandidate from '../components/CreateCandidate'
 
 function AppRouter() {
   return (
@@ -18,6 +19,7 @@ function AppRouter() {
           <Route path="/election" component={Election} />
           <Route path="/createelection" component={CreateElection} />
           <Route path="/candidate" component={Candidate} />
+          <Route path="/createcandidate" component={CreateCandidate} />
           <Route path="/voter" component={Voter} />
           <Route path="*" component={NotFound} />
         </Switch>

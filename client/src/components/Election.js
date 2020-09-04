@@ -8,7 +8,7 @@ export class Election extends Component {
     const { electionName, votingDeadline, description } = this.props
     return (
       <div>
-        <h1>Election Dashboard Page</h1>
+        <h1>Election Dashboard </h1>
         <Link to="/createelection">Create</Link>
         {electionName && <p>{electionName}</p>}
         {description && <p>{description}</p>}
@@ -25,4 +25,5 @@ const mapStateToProps = (state) => ({
   electionName: state.elections.electionName,
   description: state.elections.description
 })
+
 export default connect(mapStateToProps, undefined)(Election)
