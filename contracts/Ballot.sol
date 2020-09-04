@@ -17,12 +17,11 @@ contract Ballot {
 		bytes32 name; // name up to 32 bytes
 		uint voteCount; // total number of votes
 		bytes32 partyName;
-		bytes32 partySymbol;
+		string partySymbol;
 	}
 
 	bytes32 electionName;
 	address payable admin;
-	uint256 votingtime;
 	uint votingdeadline;
 
 	/*
@@ -148,10 +147,10 @@ contract Ballot {
 	 *@return {bytes32} c
 	 *a new Candidate object
 	 */
-	function addCandidate(bytes32 candidateName, bytes32 party, bytes32 symbol) public  {
+	function addCandidate(bytes32 candidateName, bytes32 partyName, string memory symbol) public  {
 		candidates.push(Candidate({
 			name: candidateName,
-			partyName: party,
+			partyName: partyName,
 			partySymbol: symbol,
 			voteCount: 0
 		}));
@@ -207,7 +206,7 @@ contract Ballot {
 	 *party symbol image
 	 */
 	function getCandidatePartySymbol(uint index) public view  returns(string memory symb) {
-		symb = bytes32ToString(candidates[index].partySymbol);
+		symb = candidates[index].partySymbol;
 
 	}
 
@@ -220,9 +219,10 @@ contract Ballot {
 	 *@return {string} symb
 	 *symbol image
 	 */
-	function getCandidateDetails(uint index) public view returns(string memory candid, string memory  symb) {
-		candid = bytes32ToString(candidates[index].name);
-		symb = bytes32ToString(candidates[index].partySymbol);
+	function getCandidateDetails(uint index) public view returns(string memory candidate, string memory partyName,  string memory  symb) {
+		candidate = bytes32ToString(candidates[index].name);
+		partyName = bytes32ToString(candidates[index].partyName);
+		symb = candidates[index].partySymbol;
 
 	}
 
