@@ -4,19 +4,21 @@ import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import web3Reducer from '../reducers/web3'
 import electionReducer from '../reducers/elections'
+import candidateReducer from '../reducers/candidates'
 import { transformCircular } from '../utils/transform'
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['web3', 'elections'],
+  whitelist: ['web3', 'elections', 'candidates'],
   transforms: [transformCircular]
 }
 
 const rootReducer = combineReducers({
   web3: web3Reducer,
-  elections: electionReducer
+  elections: electionReducer,
+  candidates: candidateReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

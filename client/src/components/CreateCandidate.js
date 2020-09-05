@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
+import { addCandidate } from '../actions/candidates'
 
 export class CreateCandidate extends Component {
   state = {
@@ -12,6 +13,7 @@ export class CreateCandidate extends Component {
   }
 
   onChange = (e) => {
+    this.setState({ message: '' })
     this.setState({ [e.target.name]: e.target.value })
   }
 
@@ -24,7 +26,7 @@ export class CreateCandidate extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
-    const { image, candidatename, partyname } = this.state
+    const { image, candidatename, partyname, partysymbol } = this.state
     const { instance, accounts, web3 } = this.props
 
     if (!image || !candidatename || !partyname) {
@@ -70,6 +72,12 @@ export class CreateCandidate extends Component {
           .then((res) => {
             console.log('candidate added successfully')
             console.log(res)
+            const candidate = {
+              candidatename,
+              partyname,
+              partysymbol
+            }
+            this.props.addCandidate(candidate)
           })
           .catch((e) => {
             console.log(e.message)
@@ -118,4 +126,4 @@ const mapStateToProps = (state) => ({
   instance: state.web3.instance
 })
 
-export default connect(mapStateToProps, undefined)(CreateCandidate)
+export default connect(mapStateToProps, { addCandidate })(CreateCandidate)

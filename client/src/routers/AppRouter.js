@@ -2,8 +2,8 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Header from '../components/Header'
 import App from '../components/App'
-import Election from '../components/Election'
-import Candidate from '../components/Candidate'
+import ElectionDashboard from '../components/ElectionDashboard'
+import CandidateList from '../components/CandidateList'
 import Voter from '../components/Voter'
 import NotFound from '../components/NotFound'
 import CreateElection from '../components/CreateElection'
@@ -16,9 +16,9 @@ function AppRouter() {
         <Header />
         <Switch>
           <Route path="/" component={App} exact />
-          <Route path="/election" component={Election} />
+          <Route path="/election" component={ElectionDashboard} />
           <Route path="/createelection" component={CreateElection} />
-          <Route path="/candidate" component={Candidate} />
+          <Route path="/candidate" component={CandidateList} />
           <Route path="/createcandidate" component={CreateCandidate} />
           <Route path="/voter" component={Voter} />
           <Route path="*" component={NotFound} />

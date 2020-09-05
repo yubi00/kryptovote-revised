@@ -165,7 +165,6 @@ contract Ballot {
 		Name = stringToBytes32(candidateName);
 		return Name;
 	}
-
 	/*
 	 *This function returns a number of candidates added to the blockchain
 	 *@return {uint256} length
