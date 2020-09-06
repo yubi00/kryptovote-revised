@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "kryptovote",
+    "kryptovote-app": "kryptovote"
+  }
+}
