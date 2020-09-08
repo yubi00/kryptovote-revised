@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
 import { addCandidate } from '../actions/candidates'
+import { history } from '../routers/AppRouter'
 
 export class CreateCandidate extends Component {
   state = {
@@ -26,18 +27,12 @@ export class CreateCandidate extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault()
-    const { image, candidatename, partyname, partysymbol } = this.state
+    const { image, candidatename, partyname } = this.state
     const { instance, accounts, web3 } = this.props
 
     if (!image || !candidatename || !partyname) {
       return this.setState({
         message: 'Please provide all the required fields'
-      })
-    }
-    const isallowed = await instance.methods.isAllowed().call()
-    if (isallowed) {
-      return this.setState({
-        message: 'Please wait till the voting period ends'
       })
     }
 
@@ -75,9 +70,11 @@ export class CreateCandidate extends Component {
             const candidate = {
               candidatename,
               partyname,
-              partysymbol
+              partysymbol: this.state.partysymbol
             }
+            console.log(candidate)
             this.props.addCandidate(candidate)
+            history.push('/candidate')
           })
           .catch((e) => {
             console.log(e.message)

@@ -1,7 +1,7 @@
 const initialState = {
   electionName: '',
   votingDeadline: '',
-  description: ''
+  electionDesc: ''
 }
 
 export default (state = initialState, action) => {
@@ -9,9 +9,12 @@ export default (state = initialState, action) => {
     case 'SET_ELECTION':
       return {
         ...state,
-        votingDeadline: action.votingDeadline,
-        electionName: action.electionName,
-        description: action.description
+        ...action.payload
+      }
+    case 'ADD_ELECTION':
+      return {
+        ...state,
+        ...action.payload
       }
     default:
       return state

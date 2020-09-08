@@ -2,8 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Election from './Election'
+import { setElection } from '../actions/elections'
 
 export class ElectionDashboard extends Component {
+  componentDidMount = () => {
+    this.props.setElection()
+  }
+
   render() {
     const { electionName, votingDeadline, description } = this.props
     const election = { electionName, votingDeadline, description }
@@ -20,7 +25,8 @@ export class ElectionDashboard extends Component {
 const mapStateToProps = (state) => ({
   votingDeadline: state.elections.votingDeadline,
   electionName: state.elections.electionName,
-  description: state.elections.description
+  description: state.elections.electionDesc,
+  instance: state.auth.instance
 })
 
-export default connect(mapStateToProps, undefined)(ElectionDashboard)
+export default connect(mapStateToProps, { setElection })(ElectionDashboard)

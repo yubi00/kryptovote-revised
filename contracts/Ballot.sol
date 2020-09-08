@@ -21,6 +21,7 @@ contract Ballot {
 	}
 
 	bytes32 electionName;
+	bytes32 electionDesc;
 	address payable admin;
 	uint votingdeadline;
 
@@ -99,10 +100,11 @@ contract Ballot {
 	 *@param {uint} duration
 	 *
 	 */
-	function createElection(bytes32 election, uint duration) public  {
+	function createElection(bytes32 election, bytes32 desc, uint duration) public  {
 		require( block.timestamp != votingdeadline );
 		electionName = election;
 		votingdeadline = block.timestamp + (duration * 1 minutes);
+		electionDesc = desc;
 	}
 
 	/*
@@ -112,6 +114,10 @@ contract Ballot {
 	 */
 	function getElectionName() public view  returns(string memory elecName) {
 		elecName = bytes32ToString(electionName);
+	}
+	
+	function getElectionDesc() public view returns(string memory elecDesc) {
+		elecDesc = bytes32ToString(electionDesc);
 	}
 
 	/*

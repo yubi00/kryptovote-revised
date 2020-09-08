@@ -3,7 +3,6 @@ import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/auth'
 import { clearErrors } from '../actions/errors'
-import { history } from '../routers/AppRouter'
 
 export class Login extends Component {
   state = {
@@ -22,8 +21,6 @@ export class Login extends Component {
 
     if (this.props.isAuthenticated) {
       this.props.closeModal()
-      history.push('/admindashboard')
-      console.log('login success')
     }
   }
 

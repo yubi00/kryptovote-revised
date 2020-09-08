@@ -12,6 +12,7 @@ import AdminDashboard from '../components/AdminDashboard'
 import Header from '../components/Header'
 import AuthRoute from './AuthRoute'
 import PublicRoute from './PublicRoute'
+import Vote from '../components/Vote'
 
 export const history = createBrowserHistory()
 
@@ -26,8 +27,9 @@ function AppRouter() {
         <AuthRoute path="/createelection" component={CreateElection} />
         <AuthRoute path="/candidate" component={CandidateList} />
         <AuthRoute path="/createcandidate" component={CreateCandidate} />
-        <Route path="/voter" component={Voter} />
-        <Route path="*" component={NotFound} />
+        <AuthRoute path="/voter" component={Voter} />
+        <AuthRoute path="/vote" component={Vote} />
+        <Route component={NotFound} />
       </Switch>
     </Router>
   )

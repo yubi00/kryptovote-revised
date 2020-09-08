@@ -1,49 +1,45 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setElection } from '../actions/elections'
+import { addElection } from '../actions/elections'
+import { Redirect } from 'react-router-dom'
 
 class CreateElection extends Component {
   state = {
     title: '',
     description: '',
     duration: '',
-    message: ''
+    message: '',
+    toElection: false
   }
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    const { web3, accounts, instance } = this.props
+    const { web3, accounts, instance, addElection } = this.props
 
     //create an election and store in the blockchain
-    const { title, duration } = this.state
+    const { title, duration, description } = this.state
     if (!title || !duration) {
       return this.setState({
         message: 'Please provide both title and duration'
       })
     }
-    const isallowed = await instance.methods.isAllowed().call()
-    if (isallowed) {
-      return this.setState({
-        message: 'Please wait till the voting period ends'
-      })
-    }
 
-    try {
-      await instance.methods
-        .createElection(web3.utils.stringToHex(title), parseInt(duration))
-        .send({ from: accounts[0] })
-
-      const electionName = await instance.methods.getElectionName().call()
-      const votingDeadline = await instance.methods.getVotingDeadline().call()
-      this.props.setElection(
-        electionName,
-        votingDeadline,
-        this.state.description
+    await instance.methods
+      .createElection(
+        web3.utils.stringToHex(title),
+        web3.utils.stringToHex(description),
+        parseInt(duration)
       )
-      this.props.history.push('/election')
-    } catch (error) {
-      console.log(error.message)
-    }
+      .send({ from: accounts[0] })
+    const votingDeadline = await instance.methods.getVotingDeadline().call()
+    const electionName = await instance.methods.getElectionName().call()
+    const electionDesc = await instance.methods.getElectionDesc().call()
+    addElection({
+      electionName,
+      electionDesc,
+      votingDeadline
+    })
+    this.setState({ toElection: true })
   }
 
   onChange = (e) => {
@@ -56,7 +52,10 @@ class CreateElection extends Component {
   }
 
   render() {
-    const { title, description, duration, message } = this.state
+    const { title, description, duration, message, toElection } = this.state
+
+    if (toElection) return <Redirect to="/election" />
+
     return (
       <div>
         <h1>Add Election</h1>
@@ -98,4 +97,4 @@ const mapStateToProps = (state) => ({
   instance: state.web3.instance
 })
 
-export default connect(mapStateToProps, { setElection })(CreateElection)
+export default connect(mapStateToProps, { addElection })(CreateElection)

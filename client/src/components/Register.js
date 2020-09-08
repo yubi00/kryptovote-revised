@@ -21,7 +21,6 @@ export class Register extends Component {
     }
 
     if (this.props.user) {
-      console.log('user registered')
       this.props.closeModal()
     }
   }
