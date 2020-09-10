@@ -1,13 +1,9 @@
-import ethUtil from 'ethereumjs-util'
-import getWeb3 from './getWeb3'
+import { toBuffer, privateToAddress } from 'ethereumjs-util'
 
-export const generateEthAddress = async (email) => {
-  const web3 = await getWeb3()
-
+export const generateEthAddress = (web3, email) => {
   const privateKey = web3.utils.sha3(email)
-  const ethAddress = `0x${ethUtil
-    .privateToAddress(web3.utils.hexToBytes(privateKey))
-    .toString('hex')}`
-
-  return ethAddress
+  const voterAddress = `0x${privateToAddress(toBuffer(privateKey)).toString(
+    'hex'
+  )}`
+  return voterAddress
 }

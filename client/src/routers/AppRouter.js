@@ -13,6 +13,7 @@ import Header from '../components/Header'
 import AuthRoute from './AuthRoute'
 import PublicRoute from './PublicRoute'
 import Vote from '../components/Vote'
+import Result from '../components/Result'
 
 export const history = createBrowserHistory()
 
@@ -29,6 +30,7 @@ function AppRouter() {
         <AuthRoute path="/createcandidate" component={CreateCandidate} />
         <AuthRoute path="/voter" component={Voter} />
         <AuthRoute path="/vote" component={Vote} />
+        <AuthRoute path="/results" component={Result} />
         <Route component={NotFound} />
       </Switch>
     </Router>

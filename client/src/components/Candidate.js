@@ -24,6 +24,7 @@ function Candidate({ candidate, location, selectedOption, setValue }) {
           />
         </div>
       )}
+      {location.pathname === '/results' && <h2>{candidate.voteCount}</h2>}
     </div>
   )
 }

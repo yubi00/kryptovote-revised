@@ -3,6 +3,8 @@ import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/auth'
 import { clearErrors } from '../actions/errors'
+import { generateEthAddress } from '../utils/generateEthAddress'
+import { addVoter } from '../actions/voters'
 
 export class Login extends Component {
   state = {
@@ -10,17 +12,35 @@ export class Login extends Component {
     password: '',
     message: ''
   }
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.error !== this.props.error) {
+  componentDidUpdate = async (prevProps) => {
+    const {
+      error,
+      isAuthenticated,
+      admin,
+      instance,
+      accounts,
+      web3,
+      user,
+      addVoter
+    } = this.props
+    if (prevProps.error !== error) {
       if (this.props.error.id === 'LOGIN_FAIL') {
-        this.setState({ message: this.props.error.message })
+        this.setState({ message: error.message })
       } else {
         this.setState({ message: '' })
       }
     }
 
-    if (this.props.isAuthenticated) {
+    if (isAuthenticated) {
       this.props.closeModal()
+      if (!admin) {
+        console.log('not admin')
+        const voteraddress = generateEthAddress(web3, user.email)
+        await instance.methods
+          .addVoter(web3.utils.toHex(voteraddress))
+          .send({ from: accounts[0], gas: 600000 })
+        addVoter(voteraddress)
+      }
     }
   }
 
@@ -64,7 +84,13 @@ export class Login extends Component {
 const mapStateToProps = (state) => ({
   error: state.error,
   user: state.auth.user,
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  admin: state.auth.admin,
+  instance: state.web3.instance,
+  web3: state.web3.web3,
+  accounts: state.web3.accounts
 })
 
-export default connect(mapStateToProps, { loginUser, clearErrors })(Login)
+export default connect(mapStateToProps, { loginUser, clearErrors, addVoter })(
+  Login
+)

@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 
 export const PublicRoute = ({
   isAuthenticated,
+  admin,
   component: Component,
   ...rest
 }) => (
   <Route
     {...rest}
     component={(props) =>
-      isAuthenticated ? (
+      isAuthenticated && admin ? (
         <Redirect to="/admindashboard" />
       ) : (
         <div>
@@ -22,7 +23,8 @@ export const PublicRoute = ({
 )
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  admin: state.auth.admin
 })
 
 export default connect(mapStateToProps)(PublicRoute)

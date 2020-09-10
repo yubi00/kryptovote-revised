@@ -12,15 +12,16 @@ export class Register extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.error !== this.props.error) {
+    const { error, user } = this.props
+    if (prevProps.error !== error) {
       if (this.props.error.id === 'REGISTER_FAIL') {
-        this.setState({ message: this.props.error.message })
+        this.setState({ message: error.message })
       } else {
         this.setState({ message: '' })
       }
     }
 
-    if (this.props.user) {
+    if (user) {
       this.props.closeModal()
     }
   }
@@ -32,9 +33,11 @@ export class Register extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
+
     const { email, password } = this.state
     this.props.registerUser(email, password)
   }
+
   render() {
     const { email, password, message } = this.state
     return (

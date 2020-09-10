@@ -19,7 +19,7 @@ export const setCandidates = () => {
     )
 
     const candidateLength = await instance.methods.getCandidateLength().call()
-    console.log('lenth: ', candidateLength)
+
     let candidates = []
     for (let i = 0; i < candidateLength; i++) {
       const candidatename = await instance.methods.getCandidate(i).call()
@@ -27,7 +27,8 @@ export const setCandidates = () => {
       const partysymbol = await instance.methods
         .getCandidatePartySymbol(i)
         .call()
-      const candidate = { candidatename, partyname, partysymbol }
+      const voteCount = await instance.methods.getCandidateVoteCount(i).call()
+      const candidate = { candidatename, partyname, partysymbol, voteCount }
       candidates[i] = candidate
     }
 

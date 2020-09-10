@@ -6,7 +6,7 @@ import Login from './Login'
 import { logout } from '../actions/auth'
 import NavBar from './NavBar'
 
-function Header({ logout, admin, isAuthenticated }) {
+function Header({ logout, admin, isAuthenticated, user }) {
   const [isRegisterModalOpen, setRegisterModal] = useState(false)
   const [isLoginModalOpen, setLoginModal] = useState(false)
 
@@ -41,12 +41,14 @@ function Header({ logout, admin, isAuthenticated }) {
         closeModal={handleRegisterCloseModal}
       />
       {isAuthenticated && admin && <NavBar />}
+      {isAuthenticated && <p>{`Logged  in as ${user.email}`}</p>}
     </div>
   )
 }
 const mapStateToProps = (state) => ({
   admin: state.auth.admin,
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user
 })
 
 export default connect(mapStateToProps, { logout })(Header)

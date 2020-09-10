@@ -1,11 +1,26 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { loadVoters } from '../actions/voters'
 
-function Voter() {
-  return (
-    <div>
-      <h1>I am from the voter page</h1>
-    </div>
-  )
+export class Voter extends Component {
+  componentDidMount = () => {
+    const { loadVoters } = this.props
+    loadVoters()
+  }
+
+  render() {
+    const { voters } = this.props
+    return (
+      <div>
+        <h1>Here are all the voters</h1>
+        {voters && voters.map((voter, i) => <p key={i}>{voter}</p>)}
+      </div>
+    )
+  }
 }
 
-export default Voter
+const mapStateToProps = (state) => ({
+  voters: state.voters
+})
+
+export default connect(mapStateToProps, { loadVoters })(Voter)

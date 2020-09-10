@@ -69,9 +69,7 @@ contract Ballot {
 		if (block.timestamp > votingdeadline) {
 			return false;
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 	/*
 	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
@@ -82,13 +80,12 @@ contract Ballot {
 		if (block.timestamp < votingdeadline) {
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	//Mapping is used to store the voters detail on the basis of their address
 	mapping(address => Voter) public voters;
+	address[] voterIndex;
 
 	//Dynamnically-sized array of 'Candidate' structs
 	Candidate[] public candidates;
@@ -101,7 +98,7 @@ contract Ballot {
 	 *
 	 */
 	function createElection(bytes32 election, bytes32 desc, uint duration) public  {
-		require( block.timestamp != votingdeadline );
+		delete candidates;
 		electionName = election;
 		votingdeadline = block.timestamp + (duration * 1 minutes);
 		electionDesc = desc;
@@ -274,12 +271,34 @@ contract Ballot {
 	 * address of the voter 
 	 *
 	 */
-	function addVoter(address voter) public onlyAdmin {
-		Voter storage v = voters[voter];
-		if (v.voted) {
-			return;
+	function addVoter(address voter) public  {
+		bool exist = voterExist(voter); 
+		if(!exist) {
+			voterIndex.push(voter);
+			Voter storage v = voters[voter];
+			if (v.voted) {
+				return;
+			}
+			v.weight = 1;
 		}
-		v.weight = 1;
+		
+	}
+
+	function voterExist(address voter) public view returns(bool) {
+		for(uint i=0; i< voterIndex.length; i++) {
+			if(voterIndex[i] == voter){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function getVoter(uint index) public view returns (address) {
+		return voterIndex[index];
+	}
+
+	function getVotersLength() public view returns(uint votersLength) {
+		votersLength = voterIndex.length;
 	}
 
 	/*

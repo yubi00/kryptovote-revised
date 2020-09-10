@@ -25,8 +25,7 @@ export class ElectionDashboard extends Component {
 const mapStateToProps = (state) => ({
   votingDeadline: state.elections.votingDeadline,
   electionName: state.elections.electionName,
-  description: state.elections.electionDesc,
-  instance: state.auth.instance
+  description: state.elections.electionDesc
 })
 
 export default connect(mapStateToProps, { setElection })(ElectionDashboard)
