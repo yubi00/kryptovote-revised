@@ -8,6 +8,7 @@ import electionReducer from '../reducers/elections'
 import candidateReducer from '../reducers/candidates'
 import errorReducer from '../reducers/errors'
 import voterReducer from '../reducers/voters'
+import winnerReducer from '../reducers/winner'
 
 import { transformCircular } from '../utils/transform'
 
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   candidates: candidateReducer,
   auth: authReducer,
   error: errorReducer,
-  voters: voterReducer
+  voters: voterReducer,
+  winner: winnerReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

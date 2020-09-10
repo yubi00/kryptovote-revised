@@ -26,7 +26,7 @@ export const signTransaction = async (email, message, candidateName) => {
   const hasVoted = await instance.methods.getVoted(voterAddress).call()
   const electionStatus = await instance.methods.checkVotingStatus().call()
 
-  if (!electionStatus) throw new Error('Voting period already exist ')
+  if (!electionStatus) throw new Error('Voting period already ended ')
   if (hasVoted) throw new Error('You cannot vote more than once')
 
   if (!hasVoted && electionStatus) {

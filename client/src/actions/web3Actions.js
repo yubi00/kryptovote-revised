@@ -1,19 +1,8 @@
-import getWeb3 from '../utils/getWeb3'
-import BallotContract from '../contracts/Ballot.json'
+import { getInstance } from '../utils/getInstance'
 
 export const loadWeb3 = () => {
   return async (dispatch) => {
-    const web3 = await getWeb3()
-    const accounts = await web3.eth.getAccounts()
-
-    // Get the contract instance.
-    const networkId = await web3.eth.net.getId()
-    const deployedNetwork = BallotContract.networks[networkId]
-    const instance = new web3.eth.Contract(
-      BallotContract.abi,
-      deployedNetwork && deployedNetwork.address
-    )
-
+    const { web3, accounts, instance } = await getInstance()
     dispatch({
       type: 'LOAD_WEB3',
       web3,
