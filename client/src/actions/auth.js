@@ -73,7 +73,6 @@ export const logout = () => {
     try {
       await firebaseAuth.signOut()
       dispatch({ type: 'LOG_OUT' })
-      console.log('logout success')
     } catch (error) {
       console.log(error)
     }

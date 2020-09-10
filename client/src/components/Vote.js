@@ -4,13 +4,16 @@ import moment from 'moment'
 import Candidate from './Candidate'
 import { signTransaction } from '../utils/signTransaction'
 import { setElection } from '../actions/elections'
+import { setCandidates } from '../actions/candidates'
 
 export class Vote extends Component {
   state = {
     selectedOption: ''
   }
+
   componentDidMount = () => {
     this.props.setElection()
+    this.props.setCandidates()
   }
 
   setValue = (selectedOption) => {
@@ -19,7 +22,6 @@ export class Vote extends Component {
 
   submitVote = async (e) => {
     e.preventDefault()
-    console.log(`submitting vote for ${this.state.selectedOption}`)
 
     try {
       const tx = await signTransaction(
@@ -75,4 +77,4 @@ const mapStateToProps = (state) => ({
   email: state.auth.user.email
 })
 
-export default connect(mapStateToProps, { setElection })(Vote)
+export default connect(mapStateToProps, { setElection, setCandidates })(Vote)

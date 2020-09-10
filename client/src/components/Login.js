@@ -12,6 +12,7 @@ export class Login extends Component {
     password: '',
     message: ''
   }
+
   componentDidUpdate = async (prevProps) => {
     const {
       error,
@@ -34,11 +35,11 @@ export class Login extends Component {
     if (isAuthenticated) {
       this.props.closeModal()
       if (!admin) {
-        console.log('not admin')
         const voteraddress = generateEthAddress(web3, user.email)
         await instance.methods
           .addVoter(web3.utils.toHex(voteraddress))
           .send({ from: accounts[0], gas: 600000 })
+
         addVoter(voteraddress)
       }
     }
