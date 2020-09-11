@@ -4,6 +4,7 @@ import { loadVoters } from '../actions/voters'
 
 export class Voter extends Component {
   componentDidMount = () => {
+    console.log('does it run')
     const { loadVoters } = this.props
     loadVoters()
   }

@@ -24,7 +24,7 @@ export const registerUser = (email, password) => {
       } else {
         dispatch(returnErrors(errorMessage, 'REGISTER_FAIL'))
       }
-      console.log(error)
+      dispatch(returnErrors(error.message))
     }
   }
 }

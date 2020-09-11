@@ -46,13 +46,11 @@ export class CreateCandidate extends Component {
         console.log(error)
       },
       () => {
-        console.log('uploaded success')
         storage
           .ref('images')
           .child(image.name)
           .getDownloadURL()
           .then((url) => {
-            console.log(url)
             this.setState({ partysymbol: url })
 
             //store new candidate info on blockchain
@@ -65,14 +63,11 @@ export class CreateCandidate extends Component {
               .send({ from: accounts[0], gas: 4712388 })
           })
           .then((res) => {
-            console.log('candidate added successfully')
-            console.log(res)
             const candidate = {
               candidatename,
               partyname,
               partysymbol: this.state.partysymbol
             }
-            console.log(candidate)
             this.props.addCandidate(candidate)
             history.push('/candidate')
           })

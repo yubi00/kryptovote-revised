@@ -76,7 +76,7 @@ export class Login extends Component {
             value={password}
             onChange={(e) => this.setState({ password: e.target.value })}
           />
-          <button>Login</button>
+          <button onClick={(e) => {}}>Login</button>
         </form>
       </Modal>
     )
