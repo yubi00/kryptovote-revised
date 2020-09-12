@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import { addElection } from '../actions/elections'
 import { resetResults } from '../actions/results'
 import { resetVoters } from '../actions/voters'
+import { resetCandidates } from '../actions/candidates'
 import { Redirect } from 'react-router-dom'
+import Loader from './Loader'
 
 class CreateElection extends Component {
   state = {
@@ -11,18 +13,21 @@ class CreateElection extends Component {
     description: '',
     duration: '',
     message: '',
-    toElection: false
+    toElection: false,
+    loading: false
   }
 
   handleSubmit = async (e) => {
     e.preventDefault()
+
     const {
       web3,
       accounts,
       instance,
       addElection,
       resetResults,
-      resetVoters
+      resetVoters,
+      resetCandidates
     } = this.props
 
     //create an election and store in the blockchain
@@ -32,7 +37,7 @@ class CreateElection extends Component {
         message: 'Please provide both title and duration'
       })
     }
-
+    this.setState({ loading: true })
     await instance.methods
       .createElection(
         web3.utils.stringToHex(title),
@@ -50,7 +55,8 @@ class CreateElection extends Component {
     })
     resetResults()
     resetVoters()
-
+    resetCandidates()
+    this.setState({ loading: false })
     this.setState({ toElection: true })
   }
 
@@ -64,7 +70,14 @@ class CreateElection extends Component {
   }
 
   render() {
-    const { title, description, duration, message, toElection } = this.state
+    const {
+      title,
+      description,
+      duration,
+      message,
+      toElection,
+      loading
+    } = this.state
 
     if (toElection) return <Redirect to="/election" />
 
@@ -97,6 +110,7 @@ class CreateElection extends Component {
             value={duration}
           ></input>
           <button>Save</button>
+          <div>{loading && <Loader />}</div>
         </form>
       </div>
     )
@@ -112,5 +126,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   addElection,
   resetResults,
-  resetVoters
+  resetVoters,
+  resetCandidates
 })(CreateElection)

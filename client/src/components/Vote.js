@@ -3,12 +3,15 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Candidate from './Candidate'
 import { signTransaction } from '../utils/signTransaction'
+import { addVoter } from '../actions/voters'
 import { setElection } from '../actions/elections'
 import { setCandidates } from '../actions/candidates'
+import Loader from './Loader'
 
 export class Vote extends Component {
   state = {
-    selectedOption: ''
+    selectedOption: '',
+    loading: false
   }
 
   componentDidMount = () => {
@@ -22,23 +25,34 @@ export class Vote extends Component {
 
   submitVote = async (e) => {
     e.preventDefault()
-
+    if (!this.state.selectedOption) {
+      return alert('Choose your candidate to vote')
+    }
+    const { instance, accounts, uid, addVoter } = this.props
     try {
-      const tx = await signTransaction(
-        this.props.email,
+      this.setState({ loading: true })
+      const { transactionHash, voterAddress } = await signTransaction(
+        uid,
         'vote(bytes32)',
         this.state.selectedOption
       )
-      if (tx) {
+      if (transactionHash) {
+        this.setState({ loading: false })
         alert('Voting successful')
+        await instance.methods
+          .addVoter(voterAddress)
+          .send({ from: accounts[0], gas: 600000 })
+        addVoter(voterAddress)
       }
     } catch (error) {
+      this.setState({ loading: false })
       alert(error.message)
     }
   }
 
   render() {
     const { candidates, votingDeadline, electionName } = this.props
+    const { loading } = this.state
     return (
       <div>
         <h1>Cast vote to your favourite candidate</h1>
@@ -65,6 +79,7 @@ export class Vote extends Component {
           <h2>No candidates added yet</h2>
         )}
         <button onClick={this.submitVote}>Cast Vote</button>
+        <span>{loading && <Loader />}</span>
       </div>
     )
   }
@@ -74,7 +89,14 @@ const mapStateToProps = (state) => ({
   candidates: state.candidates,
   votingDeadline: state.elections.votingDeadline,
   electionName: state.elections.electionName,
-  email: state.auth.user.email
+  uid: state.auth.user.uid,
+  web3: state.web3.web3,
+  instance: state.web3.instance,
+  accounts: state.web3.accounts
 })
 
-export default connect(mapStateToProps, { setElection, setCandidates })(Vote)
+export default connect(mapStateToProps, {
+  setElection,
+  setCandidates,
+  addVoter
+})(Vote)

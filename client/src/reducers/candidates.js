@@ -6,6 +6,8 @@ export default (state = initialState, action) => {
       return [...state, action.candidate]
     case 'SET_CANDIDATES':
       return action.candidates
+    case 'RESET_CANDIDATES':
+      return initialState
     default:
       return state
   }

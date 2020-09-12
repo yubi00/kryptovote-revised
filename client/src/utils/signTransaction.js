@@ -3,7 +3,7 @@ import { toBuffer, privateToAddress } from 'ethereumjs-util'
 import Web3 from 'web3'
 import BallotContract from '../contracts/Ballot.json'
 
-export const signTransaction = async (email, message, candidateName) => {
+export const signTransaction = async (uid, message, candidateName) => {
   const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545')
   const web3 = new Web3(provider)
 
@@ -17,7 +17,7 @@ export const signTransaction = async (email, message, candidateName) => {
     deployedNetwork && deployedNetwork.address
   )
 
-  const privateKey = web3.utils.sha3(email)
+  const privateKey = web3.utils.sha3(uid)
 
   const voterAddress = `0x${privateToAddress(toBuffer(privateKey)).toString(
     'hex'
@@ -60,6 +60,6 @@ export const signTransaction = async (email, message, candidateName) => {
     const transactionHash = await web3.eth.sendSignedTransaction(
       '0x' + serializedTx.toString('hex')
     )
-    return transactionHash
+    return { transactionHash, voterAddress }
   }
 }

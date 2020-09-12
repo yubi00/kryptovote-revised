@@ -24,3 +24,7 @@ export const setCandidates = () => {
     dispatch({ type: 'SET_CANDIDATES', candidates })
   }
 }
+
+export const resetCandidates = () => ({
+  type: 'RESET_CANDIDATES'
+})

@@ -12,7 +12,7 @@ export class Voter extends Component {
     const { voters } = this.props
     return (
       <div>
-        <h1>Here are all the voters</h1>
+        <h1>Voters Dashboard</h1>
         {voters && voters.map((voter, i) => <p key={i}>{voter}</p>)}
       </div>
     )

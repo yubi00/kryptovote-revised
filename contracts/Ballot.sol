@@ -103,6 +103,7 @@ contract Ballot {
 	 */
 	function createElection(bytes32 election, bytes32 desc, uint duration) public  {
 		delete candidates;
+		delete voterIndex;
 		electionName = election;
 		votingdeadline = block.timestamp + (duration * 1 minutes);
 		electionDesc = desc;
@@ -297,8 +298,12 @@ contract Ballot {
 		return false;
 	}
 
-	function deleteAllVoters() public  {
-		delete voterIndex;
+	function deleteAllVoters() public   {
+		for(uint i=0; i<voterIndex.length; i++) {
+			if(voterExist(voterIndex[i])) {
+				delete voterIndex[i];
+			}
+		}
 	}
 
 	function getVoter(uint index) public view returns (address) {
