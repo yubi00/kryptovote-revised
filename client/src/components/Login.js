@@ -59,6 +59,11 @@ export class Login extends Component {
     this.props.loginUser(email, password)
   }
 
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+    this.setState({ message: '' })
+  }
+
   render() {
     const { email, password, message, loading } = this.state
     return (
@@ -75,14 +80,14 @@ export class Login extends Component {
             placeholder="email"
             name="email"
             value={email}
-            onChange={(e) => this.setState({ email: e.target.value })}
+            onChange={this.onChange}
           />
           <input
             type="password"
             placeholder="password"
             name="password"
             value={password}
-            onChange={(e) => this.setState({ password: e.target.value })}
+            onChange={this.onChange}
           />
           <button>Login</button>
           <div>{!this.props.isAuthenticated && loading && <Loader />}</div>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { addElection } from '../actions/elections'
+import { resetResults } from '../actions/results'
+import { resetVoters } from '../actions/voters'
 import { Redirect } from 'react-router-dom'
 
 class CreateElection extends Component {
@@ -14,7 +16,14 @@ class CreateElection extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    const { web3, accounts, instance, addElection } = this.props
+    const {
+      web3,
+      accounts,
+      instance,
+      addElection,
+      resetResults,
+      resetVoters
+    } = this.props
 
     //create an election and store in the blockchain
     const { title, duration, description } = this.state
@@ -39,6 +48,9 @@ class CreateElection extends Component {
       electionDesc,
       votingDeadline
     })
+    resetResults()
+    resetVoters()
+
     this.setState({ toElection: true })
   }
 
@@ -97,4 +109,8 @@ const mapStateToProps = (state) => ({
   instance: state.web3.instance
 })
 
-export default connect(mapStateToProps, { addElection })(CreateElection)
+export default connect(mapStateToProps, {
+  addElection,
+  resetResults,
+  resetVoters
+})(CreateElection)

@@ -19,12 +19,10 @@ export const registerUser = (email, password) => {
       const errorMessage = error.message
       if (errorCode === 'auth/weak-password') {
         dispatch(returnErrors('The password is too weak.', 'REGISTER_FAIL'))
-      } else if (errorCode === 'auth/invalid-email') {
-        dispatch(returnErrors('Invalid email or password', 'REGISTER_FAIL'))
       } else {
         dispatch(returnErrors(errorMessage, 'REGISTER_FAIL'))
       }
-      dispatch(returnErrors(error.message))
+      dispatch(returnErrors(error.message, 'REGISTER_FAIL'))
     }
   }
 }

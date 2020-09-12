@@ -9,14 +9,14 @@ export class Register extends Component {
   state = {
     email: '',
     password: '',
-    message: '',
+    message: null,
     loading: false
   }
 
   componentDidUpdate = (prevProps) => {
     const { error, user, clearErrors } = this.props
 
-    if (error !== prevProps.error) {
+    if (prevProps.error !== error) {
       if (error.id === 'REGISTER_FAIL') {
         this.setState({ message: error.message })
         this.setState({ loading: false })
@@ -24,7 +24,6 @@ export class Register extends Component {
         this.setState({ message: '' })
       }
     }
-
     if (this.props.isModalOpen) {
       if (user) {
         clearErrors()
@@ -44,6 +43,7 @@ export class Register extends Component {
     const { email, password } = this.state
     if (!email || !password)
       return this.setState({ message: 'Please provide both required fields ' })
+
     this.setState({ loading: true })
     this.props.registerUser(email, password)
   }

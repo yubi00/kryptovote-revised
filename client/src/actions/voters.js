@@ -22,3 +22,13 @@ export const addVoter = (voter) => ({
   type: 'ADD_VOTER',
   voter
 })
+
+export const resetVoters = () => {
+  return async (dispatch) => {
+    const { instance, accounts } = await getInstance()
+    await instance.methods
+      .deleteAllVoters()
+      .send({ from: accounts[0], gas: 200000 })
+    dispatch({ type: 'RESET_VOTERS' })
+  }
+}

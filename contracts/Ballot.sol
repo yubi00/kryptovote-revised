@@ -35,6 +35,10 @@ contract Ballot {
 		_;
 	}
 
+	constructor() {
+		admin = msg.sender;
+	}
+
 	/*
 	 *only admin can change the ownership of the contract
 	 * @param {address} newAdmin
@@ -291,6 +295,10 @@ contract Ballot {
 			}
 		}
 		return false;
+	}
+
+	function deleteAllVoters() public  {
+		delete voterIndex;
 	}
 
 	function getVoter(uint index) public view returns (address) {
