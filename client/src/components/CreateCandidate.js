@@ -3,6 +3,7 @@ import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
 import { addCandidate } from '../actions/candidates'
 import { history } from '../routers/AppRouter'
+import Loader from './Loader'
 
 export class CreateCandidate extends Component {
   state = {
@@ -10,7 +11,8 @@ export class CreateCandidate extends Component {
     partyname: '',
     image: null,
     partysymbol: '',
-    message: ''
+    message: '',
+    loading: false
   }
 
   onChange = (e) => {
@@ -35,7 +37,7 @@ export class CreateCandidate extends Component {
         message: 'Please provide all the required fields'
       })
     }
-
+    this.setState({ loading: true })
     //upload image to firebase
     const upload = storage.ref(`images/${image.name}`).put(image)
 
@@ -69,6 +71,7 @@ export class CreateCandidate extends Component {
               partysymbol: this.state.partysymbol
             }
             this.props.addCandidate(candidate)
+            this.setState({ loading: false })
             history.push('/candidate')
           })
           .catch((e) => {
@@ -79,7 +82,7 @@ export class CreateCandidate extends Component {
   }
 
   render() {
-    const { candidatename, partyname, message } = this.state
+    const { candidatename, partyname, message, loading } = this.state
     return (
       <div>
         <h1>Add Candidate</h1>
@@ -106,6 +109,7 @@ export class CreateCandidate extends Component {
             onChange={this.handleFileChange}
           />
           <button>Save</button>
+          <div>{loading && <Loader />}</div>
         </form>
       </div>
     )

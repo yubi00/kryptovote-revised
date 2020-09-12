@@ -1,27 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Candidate from './Candidate'
-import { setCandidates } from '../actions/candidates'
-import { getWinner } from '../actions/winner'
+import { setResults } from '../actions/results'
+import { getWinner } from '../actions/results'
 
 export class Result extends Component {
-  state = {
-    winnerName: ''
-  }
-
   componentDidMount = async () => {
-    this.props.setCandidates()
+    this.props.setResults(this.props.candidates)
     this.props.getWinner()
   }
 
   render() {
-    const { candidates, winner } = this.props
+    const { results } = this.props
+
     return (
       <div>
         <h1>Result of the election</h1>
-        {winner && <h1>{`Congrats ${winner}`}</h1>}
-        {candidates &&
-          candidates.map((candidate, i) => (
+        {results.winnerName && <h1>{`Congrats ${results.winnerName}`}</h1>}
+        {results.candidates &&
+          results.candidates.map((candidate, i) => (
             <Candidate key={i} candidate={candidate} />
           ))}
       </div>
@@ -30,7 +27,7 @@ export class Result extends Component {
 }
 const mapStateToProps = (state) => ({
   candidates: state.candidates,
-  winner: state.winner.winnerName
+  results: state.results
 })
 
-export default connect(mapStateToProps, { setCandidates, getWinner })(Result)
+export default connect(mapStateToProps, { setResults, getWinner })(Result)

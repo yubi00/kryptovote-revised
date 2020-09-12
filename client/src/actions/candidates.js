@@ -17,8 +17,7 @@ export const setCandidates = () => {
       const partysymbol = await instance.methods
         .getCandidatePartySymbol(i)
         .call()
-      const voteCount = await instance.methods.getCandidateVoteCount(i).call()
-      const candidate = { candidatename, partyname, partysymbol, voteCount }
+      const candidate = { candidatename, partyname, partysymbol }
       candidates[i] = candidate
     }
 

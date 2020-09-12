@@ -8,8 +8,6 @@ export const registerUser = (email, password) => {
         email,
         password
       )
-      console.log(response.user)
-
       //add admin role for admin
       const addAdminRole = functions.httpsCallable('addAdminRole')
       await addAdminRole({ email })
@@ -21,6 +19,8 @@ export const registerUser = (email, password) => {
       const errorMessage = error.message
       if (errorCode === 'auth/weak-password') {
         dispatch(returnErrors('The password is too weak.', 'REGISTER_FAIL'))
+      } else if (errorCode === 'auth/invalid-email') {
+        dispatch(returnErrors('Invalid email or password', 'REGISTER_FAIL'))
       } else {
         dispatch(returnErrors(errorMessage, 'REGISTER_FAIL'))
       }

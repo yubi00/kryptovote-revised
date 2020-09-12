@@ -5,12 +5,14 @@ import { loginUser } from '../actions/auth'
 import { clearErrors } from '../actions/errors'
 import { generateEthAddress } from '../utils/generateEthAddress'
 import { addVoter } from '../actions/voters'
+import Loader from './Loader'
 
 export class Login extends Component {
   state = {
     email: '',
     password: '',
-    message: ''
+    message: '',
+    loading: false
   }
 
   componentDidUpdate = async (prevProps) => {
@@ -25,34 +27,40 @@ export class Login extends Component {
       addVoter
     } = this.props
     if (prevProps.error !== error) {
-      if (this.props.error.id === 'LOGIN_FAIL') {
+      if (error.id === 'LOGIN_FAIL') {
         this.setState({ message: error.message })
+        this.setState({ loading: false })
       } else {
         this.setState({ message: '' })
       }
     }
 
-    if (isAuthenticated) {
-      this.props.closeModal()
-      if (!admin) {
-        const voteraddress = generateEthAddress(web3, user.email)
-        await instance.methods
-          .addVoter(web3.utils.toHex(voteraddress))
-          .send({ from: accounts[0], gas: 600000 })
+    if (this.props.isModalOpen) {
+      if (isAuthenticated) {
+        this.props.clearErrors()
+        this.props.closeModal()
+        this.setState({ loading: false })
+        if (!admin) {
+          const voteraddress = generateEthAddress(web3, user.email)
+          await instance.methods
+            .addVoter(web3.utils.toHex(voteraddress))
+            .send({ from: accounts[0], gas: 600000 })
 
-        addVoter(voteraddress)
+          addVoter(voteraddress)
+        }
       }
     }
   }
 
   onSubmit = (e) => {
     e.preventDefault()
+    this.setState({ loading: true })
     const { email, password } = this.state
     this.props.loginUser(email, password)
   }
 
   render() {
-    const { email, password, message } = this.state
+    const { email, password, message, loading } = this.state
     return (
       <Modal
         isOpen={this.props.isModalOpen}
@@ -76,7 +84,8 @@ export class Login extends Component {
             value={password}
             onChange={(e) => this.setState({ password: e.target.value })}
           />
-          <button onClick={(e) => {}}>Login</button>
+          <button>Login</button>
+          <div>{!this.props.isAuthenticated && loading && <Loader />}</div>
         </form>
       </Modal>
     )

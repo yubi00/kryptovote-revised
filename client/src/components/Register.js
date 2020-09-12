@@ -3,26 +3,34 @@ import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { registerUser } from '../actions/auth'
 import { clearErrors } from '../actions/errors'
+import Loader from './Loader'
 
 export class Register extends Component {
   state = {
     email: '',
     password: '',
-    message: ''
+    message: '',
+    loading: false
   }
 
   componentDidUpdate = (prevProps) => {
-    const { error, user } = this.props
-    if (prevProps.error !== error) {
-      if (this.props.error.id === 'REGISTER_FAIL') {
+    const { error, user, clearErrors } = this.props
+
+    if (error !== prevProps.error) {
+      if (error.id === 'REGISTER_FAIL') {
         this.setState({ message: error.message })
+        this.setState({ loading: false })
       } else {
         this.setState({ message: '' })
       }
     }
 
-    if (user) {
-      this.props.closeModal()
+    if (this.props.isModalOpen) {
+      if (user) {
+        clearErrors()
+        this.props.closeModal()
+        this.setState({ loading: false })
+      }
     }
   }
 
@@ -33,13 +41,15 @@ export class Register extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-
     const { email, password } = this.state
+    if (!email || !password)
+      return this.setState({ message: 'Please provide both required fields ' })
+    this.setState({ loading: true })
     this.props.registerUser(email, password)
   }
 
   render() {
-    const { email, password, message } = this.state
+    const { email, password, message, loading } = this.state
     return (
       <Modal
         isOpen={this.props.isModalOpen}
@@ -64,6 +74,7 @@ export class Register extends Component {
             onChange={this.onChange}
           />
           <button>Register</button>
+          <div> {loading && <Loader />} </div>
         </form>
       </Modal>
     )
@@ -72,8 +83,7 @@ export class Register extends Component {
 
 const mapStateToProps = (state) => ({
   error: state.error,
-  user: state.auth.user,
-  isAuthenticated: state.auth.isAuthenticated
+  user: state.auth.user
 })
 
 export default connect(mapStateToProps, { registerUser, clearErrors })(Register)

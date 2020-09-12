@@ -8,7 +8,7 @@ import electionReducer from '../reducers/elections'
 import candidateReducer from '../reducers/candidates'
 import errorReducer from '../reducers/errors'
 import voterReducer from '../reducers/voters'
-import winnerReducer from '../reducers/winner'
+import resultsReducer from '../reducers/results'
 
 import { transformCircular } from '../utils/transform'
 
@@ -16,7 +16,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['web3', 'candidates', 'elections', 'voters', 'auth'],
+  whitelist: ['web3', 'candidates', 'elections', 'auth', 'voters', 'results'],
   blacklist: ['error'],
   transforms: [transformCircular]
 }
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   error: errorReducer,
   voters: voterReducer,
-  winner: winnerReducer
+  results: resultsReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
