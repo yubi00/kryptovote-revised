@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { history } from '../routers/AppRouter'
+import moment from 'moment'
 
 export class App extends Component {
   handleResults = async (e) => {
@@ -9,9 +10,11 @@ export class App extends Component {
 
     const { instance } = this.props
 
-    const status = await instance.methods.checkVotingStatus().call()
+    const votingDeadline = await instance.methods.getVotingDeadline().call()
+    const currentTime = moment().valueOf()
+    const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
 
-    if (status) {
+    if (difference > 0) {
       alert('You cannot view the results now')
     } else {
       history.push('/results')
@@ -36,8 +39,7 @@ export class App extends Component {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   web3: state.web3.web3,
-  instance: state.web3.instance,
-  votingDeadline: state.elections.votingDeadline
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, undefined)(App)

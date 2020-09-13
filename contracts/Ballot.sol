@@ -8,7 +8,6 @@ contract Ballot {
 	struct Voter {
 		uint weight; //weight is amount of vote the voter can have
 		bool voted; //true implies voter already voted
-		uint vote; //index of the voted candidate
 	}
 
 	//Candidate type for a single candidate
@@ -22,71 +21,23 @@ contract Ballot {
 
 	bytes32 electionName;
 	bytes32 electionDesc;
-	address payable admin;
+	address public admin;
 	uint votingdeadline;
-
-	/*
-	 *This is a special type of func called modifier which is used to restrict the execution of certain transaction, where the admin only have the rights to do so
-	 *
-	 */
-	modifier onlyAdmin() {
-		if (msg.sender != admin)
-			return;
-		_;
-	}
 
 	constructor() {
 		admin = msg.sender;
 	}
 
 	/*
-	 *only admin can change the ownership of the contract
-	 * @param {address} newAdmin
-	 * address of the admin 
+	 *This is a special type of func called modifier which is used to restrict the execution of certain transaction, where the admin only have the rights to do so
 	 *
 	 */
+	modifier onlyAdmin() {
+		require(msg.sender == admin);
+		_;
+	}
+
 	
-
-	/*
-	 * This function is used set the voting time limit , the duration set by the admin will be added to the current time 
-	 * @param {uint} duration
-	 * duration of the voting period
-	 *
-	 */
-	function setVotingDeadline(uint duration) public {
-		votingdeadline = block.timestamp + (duration * 1 minutes);
-	}
-
-	/*
-	 *This getter function is used to get the voting deadline, where we have set using the setVotingDeadline() 
-	 *
-	 */
-	function getVotingDeadline() public view returns(uint) {
-		return votingdeadline;
-	}
-
-	/*
-	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
-	 *
-	 */
-	function checkVotingStatus() public view returns(bool) {
-		if (block.timestamp > votingdeadline) {
-			return false;
-		}
-		return true;
-	}
-	/*
-	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
-	 *
-	 */
-	//This function is used make sure that the users are not not allowed to  result unless the voting ends
-	function isAllowed() public view returns(bool) {
-		if (block.timestamp < votingdeadline) {
-			return true;
-		}
-		return false;
-	}
-
 	//Mapping is used to store the voters detail on the basis of their address
 	mapping(address => Voter) public voters;
 	address[] voterIndex;
@@ -103,6 +54,7 @@ contract Ballot {
 	 */
 	function createElection(bytes32 election, bytes32 desc, uint duration) public  {
 		delete candidates;
+		deleteAllVoters();
 		delete voterIndex;
 		electionName = election;
 		votingdeadline = block.timestamp + (duration * 1 minutes);
@@ -120,6 +72,35 @@ contract Ballot {
 	
 	function getElectionDesc() public view returns(string memory elecDesc) {
 		elecDesc = bytes32ToString(electionDesc);
+	}
+
+	/*
+	 *This getter function is used to get the voting deadline,
+	 *
+	 */
+	function getVotingDeadline() public view returns(uint) {
+		return votingdeadline;
+	}
+/*
+	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
+	 *
+	 */
+	function checkVotingStatus() public view returns(bool) {
+		if (block.timestamp >= votingdeadline) {
+			return false;
+		}
+		return true;
+	}
+	/*
+	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
+	 *
+	 */
+	//This function is used make sure that the users are not not allowed to  result unless the voting ends
+	function isAllowed() public view returns(bool) {
+		if (block.timestamp < votingdeadline) {
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -144,6 +125,20 @@ contract Ballot {
 		}
 		return string(bytesStringTrimmed);
 	}
+
+	/*
+	 *This is a helper function which converts string to bytes32
+	 *@param {string memory} source
+	 *string data type 
+	 *@return {bytes32} result
+	 *result in bytes32
+	 */
+	function stringToBytes32(string memory source) public pure returns(bytes32 result) {
+		assembly {
+			result := mload(add(source, 32))
+		}
+	}
+
 	/*
 	 *This function is used to add candidates to the blockchin, which requires three arguements such as candidatename, partyname and party symbol image
 	 *@param {bytes32} candid
@@ -164,15 +159,6 @@ contract Ballot {
 		}));
 	}
 
-	/*
-	 *This function is used to add candidatename to the blockchain
-	 *@return {bytes32} Name
-	 * name of a candidate
-	 */
-	function addCandidateName(string memory candidateName) public pure returns(bytes32 Name) {
-		Name = stringToBytes32(candidateName);
-		return Name;
-	}
 	/*
 	 *This function returns a number of candidates added to the blockchain
 	 *@return {uint256} length
@@ -233,29 +219,7 @@ contract Ballot {
 
 	}
 
-	/*
-	 *This function is used to retrieve the candidate name as a bytes32
-	 *@param {uint} index
-	 *index of the candidate
-	 *@return {bytes32} candid
-	 *candidate by bytes
-	 */
-	function getCandidateBytes(uint index) public view  returns(bytes32 candid) {
-		candid = candidates[index].name;
-	}
-
-	/*
-	 *This is a helper function which converts string to bytes32
-	 *@param {string memory} source
-	 *string data type 
-	 *@return {bytes32} result
-	 *result in bytes32
-	 */
-	function stringToBytes32(string memory source) public pure returns(bytes32 result) {
-		assembly {
-			result := mload(add(source, 32))
-		}
-	}
+	
 
 	/*
 	 *Admin only gives 'voter' right to vote on the ballot
@@ -264,9 +228,9 @@ contract Ballot {
 	 *
 	 */
 	function giveRightToVote(address voter) public onlyAdmin {
-		if (msg.sender != admin || voters[voter].voted) {
-			return;
-		}
+		require(msg.sender == admin);
+		require(!voters[voter].voted);
+
 		voters[voter].weight = 1;
 	}
 
@@ -280,13 +244,7 @@ contract Ballot {
 		bool exist = voterExist(voter); 
 		if(!exist) {
 			voterIndex.push(voter);
-			Voter storage v = voters[voter];
-			if (v.voted) {
-				return;
-			}
-			v.weight = 1;
 		}
-		
 	}
 
 	function voterExist(address voter) public view returns(bool) {
@@ -301,7 +259,7 @@ contract Ballot {
 	function deleteAllVoters() public   {
 		for(uint i=0; i<voterIndex.length; i++) {
 			if(voterExist(voterIndex[i])) {
-				delete voterIndex[i];
+				delete voters[voterIndex[i]];
 			}
 		}
 	}
@@ -337,45 +295,23 @@ contract Ballot {
 	 *@return {bool} check
 	 *boolean value
 	 */
-	function vote(bytes32 candidateName) public  returns(bool check) {
+	function vote(bytes32 candidateName) public {
 		Voter storage sender = voters[msg.sender];
-		if (sender.voted) {
-			return true;
-		}
-		else {
-			sender.voted = true;
-			sender.weight = 1;
+		
+		require(block.timestamp < votingdeadline, 'voting period ended already');
+		require(!sender.voted);
 
-			for (uint i = 0; i < candidates.length; i++) {
-				if (candidates[i].name == candidateName) {
-					candidates[i].voteCount += sender.weight;
-				}
+		sender.voted = true;
+		sender.weight = 1;
+
+		for (uint i = 0; i < candidates.length; i++) {
+			if (candidates[i].name == candidateName) {
+				candidates[i].voteCount += sender.weight;
 			}
-			return false;
 		}
+			
 	}
 
-	/*
-	 *This function checks if two strings are equal. Note, Solidity handles bytes32 and string as a different data type 
-	 * @param {string} _a
-	 * first string
-	 * @param {string} _b
-	 * second string
-	 *@return {bool}
-	 *boolean value
-	 */
-	function stringsEqual(string  storage _a, string memory _b) internal view returns(bool) {
-		bytes storage a = bytes(_a);
-		bytes memory b = bytes(_b);
-		if (a.length != b.length)
-			return false;
-
-		for (uint i = 0; i < a.length; i++) {
-			if (a[i] != b[i])
-				return false;
-		}
-		return true;
-	}
 
 	/*
 	 *This function gets the number of vote count of each candidate on the basis of their index
@@ -415,22 +351,6 @@ contract Ballot {
 	}
 
 	/*
-	 *this function returns the total number of committed votes of each candidate, provided their name 
-	 * @param {bytes32} candidate
-	 * name of the candidate in bytes32
-	 *@return {uint}
-	 *total number of votes for each candidate
-	 */
-
-	function totalVotesFor(bytes32 candidate) public view  returns(uint) {
-		for (uint i = 0; i < candidates.length; i++) {
-			if (candidates[i].name == candidate) {
-				return getCandidateVoteCount(i);
-			}
-		}
-	}
-
-	/*
 	 *Automatic calculation of winning candidate with all votes of the voters
 	 * @return {uint} winningCandidate
 	 * the highest number of votes
@@ -455,23 +375,4 @@ contract Ballot {
 		winner = bytes32ToString(candidates[winningCandidate()].name);
 	}
 
-	/*
-	 *This function kills the contract and the remaining funds of the contract is recovered back to the admin
-	 *
-	 */
-	function kill() public {
-		if (msg.sender == admin) {
-			selfdestruct(admin);
-		}
-	}
-
-	/*
-	 *  This is a fallback function, which rejects any ether sent to it.It is good Ballotpractise to include such a function for every contract
-	 * in order not to loose Ether.  
-	 *@return {}
-	 */
-
-	 fallback() external {
-		return;
-	}
 }

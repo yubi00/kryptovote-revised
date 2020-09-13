@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Candidate from './Candidate'
 import { setResults } from '../actions/results'
+import { setCandidates } from '../actions/candidates'
 import { getWinner } from '../actions/results'
 
 export class Result extends Component {
   componentDidMount = async () => {
-    this.props.setResults(this.props.candidates)
-    this.props.getWinner()
+    const { setCandidates, setResults, getWinner } = this.props
+    setCandidates()
+    setResults(this.props.candidates)
+    getWinner()
   }
 
   render() {
@@ -30,4 +33,8 @@ const mapStateToProps = (state) => ({
   results: state.results
 })
 
-export default connect(mapStateToProps, { setResults, getWinner })(Result)
+export default connect(mapStateToProps, {
+  setResults,
+  getWinner,
+  setCandidates
+})(Result)

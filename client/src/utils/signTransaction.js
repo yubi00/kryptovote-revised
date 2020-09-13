@@ -2,6 +2,7 @@ import { Transaction as Tx } from 'ethereumjs-tx'
 import { toBuffer, privateToAddress } from 'ethereumjs-util'
 import Web3 from 'web3'
 import BallotContract from '../contracts/Ballot.json'
+import moment from 'moment'
 
 export const signTransaction = async (uid, message, candidateName) => {
   const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545')
@@ -24,12 +25,16 @@ export const signTransaction = async (uid, message, candidateName) => {
   )}`
 
   const hasVoted = await instance.methods.getVoted(voterAddress).call()
-  const electionStatus = await instance.methods.checkVotingStatus().call()
+  const votingDeadline = await instance.methods.getVotingDeadline().call()
+  const currentTime = moment().valueOf()
+  const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
+  console.log(Math.floor(currentTime / 1000), parseInt(votingDeadline))
+  console.log(difference)
 
-  if (!electionStatus) throw new Error('Voting period already ended ')
+  if (difference <= 0) throw new Error('Voting period already ended ')
   if (hasVoted) throw new Error('You cannot vote more than once')
 
-  if (!hasVoted && electionStatus) {
+  if (!hasVoted && difference > 0) {
     await web3.eth.sendTransaction({
       from: account,
       to: voterAddress,

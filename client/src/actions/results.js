@@ -23,7 +23,6 @@ export const setResults = (candidates) => {
       const voteCount = await instance.methods.getCandidateVoteCount(i).call()
       candidates[i] = { ...candidates[i], voteCount: parseInt(voteCount) }
     }
-    console.log(candidates)
     dispatch({ type: 'SET_RESULTS', candidates })
   }
 }
