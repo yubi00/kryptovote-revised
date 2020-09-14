@@ -12,7 +12,8 @@ export class CreateCandidate extends Component {
     image: null,
     partysymbol: '',
     message: '',
-    loading: false
+    loading: false,
+    disabled: false
   }
 
   onChange = (e) => {
@@ -31,7 +32,7 @@ export class CreateCandidate extends Component {
     e.preventDefault()
     const { image, candidatename, partyname } = this.state
     const { instance, accounts, web3 } = this.props
-
+    this.setState({ disabled: true })
     if (!image || !candidatename || !partyname) {
       return this.setState({
         message: 'Please provide all the required fields'
@@ -82,7 +83,7 @@ export class CreateCandidate extends Component {
   }
 
   render() {
-    const { candidatename, partyname, message, loading } = this.state
+    const { candidatename, partyname, message, loading, disabled } = this.state
     return (
       <div>
         <h1>Add Candidate</h1>
@@ -108,7 +109,7 @@ export class CreateCandidate extends Component {
             accept=".jpg, .png, .jpeg"
             onChange={this.handleFileChange}
           />
-          <button>Save</button>
+          <button disabled={disabled}>Save</button>
           <div>{loading && <Loader />}</div>
         </form>
       </div>

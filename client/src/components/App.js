@@ -5,23 +5,33 @@ import { history } from '../routers/AppRouter'
 import moment from 'moment'
 
 export class App extends Component {
-  handleResults = async (e) => {
-    e.preventDefault()
+  state = {
+    disabled: false
+  }
 
-    const { instance } = this.props
+  componentDidMount = () => {
+    this.showResult()
+  }
 
-    const votingDeadline = await instance.methods.getVotingDeadline().call()
+  showResult = () => {
+    const { votingDeadline } = this.props
     const currentTime = moment().valueOf()
     const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
-
     if (difference > 0) {
-      alert('You cannot view the results now')
+      this.setState({ disabled: true })
     } else {
-      history.push('/results')
+      this.setState({ disabled: false })
     }
   }
+
+  handleResults = async (e) => {
+    e.preventDefault()
+    history.push('/results')
+  }
+
   render() {
     const { isAuthenticated, web3 } = this.props
+    const { disabled } = this.state
     if (!web3) return <div>Loading web3, accounts and contract instance...</div>
     return (
       <div>
@@ -29,7 +39,9 @@ export class App extends Component {
         {!isAuthenticated && <h2>Login to your accout to get started</h2>}
         {isAuthenticated && <Link to="/vote">Vote here</Link>}
         {isAuthenticated && (
-          <button onClick={this.handleResults}>View Results</button>
+          <button onClick={this.handleResults} disabled={disabled}>
+            View Results
+          </button>
         )}
       </div>
     )
@@ -39,7 +51,7 @@ export class App extends Component {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   web3: state.web3.web3,
-  instance: state.web3.instance
+  votingDeadline: state.elections.votingDeadline
 })
 
 export default connect(mapStateToProps, undefined)(App)

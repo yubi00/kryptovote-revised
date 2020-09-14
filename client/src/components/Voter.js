@@ -13,7 +13,11 @@ export class Voter extends Component {
     return (
       <div>
         <h1>Voters Dashboard</h1>
-        {voters && voters.map((voter, i) => <p key={i}>{voter}</p>)}
+        {voters.length === 0 ? (
+          <h2>No voters yet</h2>
+        ) : (
+          voters.map((voter, i) => <p key={i}>{voter}</p>)
+        )}
       </div>
     )
   }

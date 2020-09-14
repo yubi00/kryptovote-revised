@@ -14,12 +14,13 @@ class CreateElection extends Component {
     duration: '',
     message: '',
     toElection: false,
-    loading: false
+    loading: false,
+    disabled: false
   }
 
   handleSubmit = async (e) => {
     e.preventDefault()
-
+    this.setState({ disabled: true })
     const {
       web3,
       accounts,
@@ -76,7 +77,8 @@ class CreateElection extends Component {
       duration,
       message,
       toElection,
-      loading
+      loading,
+      disabled
     } = this.state
 
     if (toElection) return <Redirect to="/election" />
@@ -109,7 +111,7 @@ class CreateElection extends Component {
             onChange={this.onChange}
             value={duration}
           ></input>
-          <button>Save</button>
+          <button disabled={disabled}>Save</button>
           <div>{loading && <Loader />}</div>
         </form>
       </div>
