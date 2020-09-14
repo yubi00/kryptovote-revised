@@ -6,7 +6,6 @@ import { getWinner } from '../actions/results'
 
 export class Result extends Component {
   componentDidMount = async () => {
-    window.location.reload(false)
     const { setResults, getWinner } = this.props
 
     setResults(this.props.candidates)

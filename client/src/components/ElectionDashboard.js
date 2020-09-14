@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { Link } from 'react-router-dom'
 import Election from './Election'
 import { setElection } from '../actions/elections'
 import { history } from '../routers/AppRouter'
 
 export class ElectionDashboard extends Component {
   state = {
-    disabled: false
+    disabled: false,
+    difference: null
   }
   componentDidMount = () => {
     this.props.setElection()
@@ -17,8 +17,11 @@ export class ElectionDashboard extends Component {
 
   showResult = () => {
     const { votingDeadline } = this.props
+
     const currentTime = moment().valueOf()
     const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
+    this.setState({ difference })
+
     if (difference > 0) {
       this.setState({ disabled: true })
     } else {
@@ -31,6 +34,15 @@ export class ElectionDashboard extends Component {
     history.push('/results')
   }
 
+  handleCreateElection = (e) => {
+    e.preventDefault()
+    if (this.state.difference > 0) {
+      alert('Wait till the current election ends')
+    } else {
+      history.push('/createelection')
+    }
+  }
+
   render() {
     const { electionName, votingDeadline, description } = this.props
     const { disabled } = this.state
@@ -39,7 +51,7 @@ export class ElectionDashboard extends Component {
     return (
       <div>
         <h1>Election Dashboard </h1>
-        <Link to="/createelection">Create</Link>
+        <button onClick={this.handleCreateElection}>Create</button>
         <Election election={election} />
         <button onClick={this.handleResults} disabled={disabled}>
           View Results

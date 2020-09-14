@@ -16,7 +16,12 @@ export class Voter extends Component {
         {voters.length === 0 ? (
           <h2>No voters yet</h2>
         ) : (
-          voters.map((voter, i) => <p key={i}>{voter}</p>)
+          <div>
+            <h2>{`There are currently ${voters.length} voters`}</h2>
+            {voters.map((voter, i) => (
+              <p key={i}>{voter}</p>
+            ))}
+          </div>
         )}
       </div>
     )
