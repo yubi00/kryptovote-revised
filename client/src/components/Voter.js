@@ -17,7 +17,7 @@ export class Voter extends Component {
           <h2>No voters yet</h2>
         ) : (
           <div>
-            <h2>{`There are currently ${voters.length} voters`}</h2>
+            <h2>{`Total number of voters:  ${voters.length} `}</h2>
             {voters.map((voter, i) => (
               <p key={i}>{voter}</p>
             ))}

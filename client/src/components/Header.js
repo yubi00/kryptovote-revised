@@ -5,6 +5,7 @@ import Register from './Register'
 import Login from './Login'
 import { logout } from '../actions/auth'
 import NavBar from './NavBar'
+import Counter from './Counter'
 
 function Header({ logout, admin, isAuthenticated, user }) {
   const [isRegisterModalOpen, setRegisterModal] = useState(false)
@@ -40,6 +41,7 @@ function Header({ logout, admin, isAuthenticated, user }) {
         isModalOpen={isRegisterModalOpen}
         closeModal={handleRegisterCloseModal}
       />
+      <Counter />
       {isAuthenticated && admin && <NavBar />}
       {isAuthenticated && <p>{`Logged  in as ${user.email}`}</p>}
     </div>

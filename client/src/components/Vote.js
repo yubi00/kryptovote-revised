@@ -28,10 +28,11 @@ export class Vote extends Component {
     if (!this.state.selectedOption) {
       return alert('Choose your candidate to vote')
     }
-    const { instance, accounts, uid, addVoter } = this.props
+    const { web3, instance, accounts, uid, addVoter } = this.props
     try {
       this.setState({ loading: true })
       const { transactionHash, voterAddress } = await signTransaction(
+        web3,
         uid,
         'vote(bytes32)',
         this.state.selectedOption

@@ -35,7 +35,7 @@ export class App extends Component {
     if (!web3) return <div>Loading web3, accounts and contract instance...</div>
     return (
       <div>
-        <h1>This is the main public page</h1>
+        <h1>Welcome to KryptoVote Fellas !!</h1>
         {!isAuthenticated && <h2>Login to your accout to get started</h2>}
         {isAuthenticated && <Link to="/vote">Vote here</Link>}
         {isAuthenticated && (
