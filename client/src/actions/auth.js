@@ -19,10 +19,11 @@ export const registerUser = (email, password) => {
       const errorMessage = error.message
       if (errorCode === 'auth/weak-password') {
         dispatch(returnErrors('The password is too weak.', 'REGISTER_FAIL'))
+      } else if (errorCode === 'auth/invalid-email') {
+        dispatch(returnErrors('Ooops! Email not recognized', 'REGISTER_FAIL'))
       } else {
         dispatch(returnErrors(errorMessage, 'REGISTER_FAIL'))
       }
-      dispatch(returnErrors(error.message, 'REGISTER_FAIL'))
     }
   }
 }
@@ -56,12 +57,15 @@ export const loginUser = (email, password) => {
       dispatch({ type: 'LOGIN_FAIL' })
       const errorCode = error.code
       const errorMessage = error.message
-      if (errorCode === 'auth/wrong-password') {
-        dispatch(returnErrors('Wrong password', 'LOGIN_FAIL'))
+      if (
+        errorCode === 'auth/wrong-password' ||
+        errorCode === 'auth/invalid-email' ||
+        errorCode === 'auth/user-not-found'
+      ) {
+        dispatch(returnErrors('Invalid email or password', 'LOGIN_FAIL'))
       } else {
         dispatch(returnErrors(errorMessage, 'LOGIN_FAIL'))
       }
-      console.log(error)
     }
   }
 }

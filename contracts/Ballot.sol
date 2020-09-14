@@ -81,27 +81,6 @@ contract Ballot {
 	function getVotingDeadline() public view returns(uint) {
 		return votingdeadline;
 	}
-/*
-	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
-	 *
-	 */
-	function checkVotingStatus() public view returns(bool) {
-		if (block.timestamp >= votingdeadline) {
-			return false;
-		}
-		return true;
-	}
-	/*
-	 *This function is used to make sure that users are not allowed to vote after the voting period ends which will return false
-	 *
-	 */
-	//This function is used make sure that the users are not not allowed to  result unless the voting ends
-	function isAllowed() public view returns(bool) {
-		if (block.timestamp < votingdeadline) {
-			return true;
-		}
-		return false;
-	}
 
 	/*
 	 *This is a helper function which is used to convert the given bytes32 to string which is later required when we want to retrieve the output as a string 
@@ -218,8 +197,6 @@ contract Ballot {
 		symb = candidates[index].partySymbol;
 
 	}
-
-	
 
 	/*
 	 *Admin only gives 'voter' right to vote on the ballot

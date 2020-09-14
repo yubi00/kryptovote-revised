@@ -28,8 +28,6 @@ export const signTransaction = async (uid, message, candidateName) => {
   const votingDeadline = await instance.methods.getVotingDeadline().call()
   const currentTime = moment().valueOf()
   const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
-  console.log(Math.floor(currentTime / 1000), parseInt(votingDeadline))
-  console.log(difference)
 
   if (difference <= 0) throw new Error('Voting period already ended ')
   if (hasVoted) throw new Error('You cannot vote more than once')

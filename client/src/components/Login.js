@@ -35,8 +35,13 @@ export class Login extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-    this.setState({ loading: true })
+
     const { email, password } = this.state
+    if (!email || !password) {
+      return this.setState({ message: 'Both fields are required' })
+    }
+
+    this.setState({ loading: true })
     this.props.loginUser(email, password)
   }
 

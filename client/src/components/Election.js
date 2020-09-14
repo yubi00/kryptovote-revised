@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 
 function Election({ election }) {
-  const [electionStatus, setStatus] = useState('No election created yet')
+  const [electionStatus, setStatus] = useState('NO ELECTION CREATED YET')
   const { electionName, description, votingDeadline } = election
 
   useEffect(() => {
