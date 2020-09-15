@@ -1,6 +1,6 @@
 const initialState = {
   electionName: '',
-  votingDeadline: '',
+  votingDeadline: 0,
   electionDesc: ''
 }
 
@@ -16,6 +16,8 @@ export default (state = initialState, action) => {
         ...state,
         ...action.payload
       }
+    case 'END_ELECTION':
+      return { ...state, votingDeadline: 0 }
     default:
       return state
   }

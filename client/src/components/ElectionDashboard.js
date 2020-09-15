@@ -6,16 +6,12 @@ import { setElection } from '../actions/elections'
 import { history } from '../routers/AppRouter'
 
 export class ElectionDashboard extends Component {
-  state = {
-    disabled: false,
-    difference: null
-  }
   componentDidMount = () => {
     this.props.setElection()
-    this.showResult()
   }
 
-  showResult = () => {
+  handleResults = async (e) => {
+    e.preventDefault()
     const { votingDeadline } = this.props
 
     const currentTime = moment().valueOf()
@@ -23,20 +19,20 @@ export class ElectionDashboard extends Component {
     this.setState({ difference })
 
     if (difference > 0) {
-      this.setState({ disabled: true })
+      alert('You cannot view result now')
     } else {
-      this.setState({ disabled: false })
+      history.push('/results')
     }
-  }
-
-  handleResults = async (e) => {
-    e.preventDefault()
-    history.push('/results')
   }
 
   handleCreateElection = (e) => {
     e.preventDefault()
-    if (this.state.difference > 0) {
+    const { votingDeadline } = this.props
+
+    const currentTime = moment().valueOf()
+    const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
+
+    if (difference > 0) {
       alert('Wait till the current election ends')
     } else {
       history.push('/createelection')
@@ -45,7 +41,6 @@ export class ElectionDashboard extends Component {
 
   render() {
     const { electionName, votingDeadline, description } = this.props
-    const { disabled } = this.state
     const election = { electionName, votingDeadline, description }
 
     return (
@@ -53,9 +48,7 @@ export class ElectionDashboard extends Component {
         <h1>Election Dashboard </h1>
         <button onClick={this.handleCreateElection}>Create</button>
         <Election election={election} />
-        <button onClick={this.handleResults} disabled={disabled}>
-          View Results
-        </button>
+        <button onClick={this.handleResults}>View Results</button>
       </div>
     )
   }

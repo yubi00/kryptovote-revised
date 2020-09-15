@@ -1,29 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import { endElection } from '../actions/elections'
 
 export class Counter extends Component {
   state = {
-    difference: null,
     hours: null,
     minutes: null,
-    seconds: null
+    seconds: null,
+    status: null
   }
   componentDidMount = () => {
-    this.getTimeLeft()
     this.setCounter()
   }
 
   setCounter = () => {
     setInterval(() => {
+      this.getTimeLeft()
       const { minutes, hours, seconds } = this.state
-      if (hours === 0 && minutes === 0 && seconds === 0) return
-      if (seconds === 0) {
+      if (hours === 0 && minutes === 0 && seconds === 0) {
+        this.setState({ status: 'VOTING PERIOD ENDED' })
+        this.setState({ hour: null, minutes: null, seconds: null })
+        this.props.endElection()
+      } else if (seconds === 0 && minutes !== 0) {
         this.setState((prevState) => {
           return { minutes: prevState.minutes - 1, seconds: 60 }
         })
-      }
-      if (minutes === 0) {
+      } else if (minutes === 0 && hours !== 0) {
         this.setState((prevState) => {
           return { hours: prevState.hours - 1, minutes: 59, seconds: 60 }
         })
@@ -40,7 +43,6 @@ export class Counter extends Component {
     const currentTime = moment()
     const votingEndTime = moment.unix(votingDeadline)
     const difference = votingEndTime.diff(currentTime, 'seconds')
-    this.setState({ difference })
 
     if (difference > 0) {
       const hours = votingEndTime.diff(currentTime, 'hours')
@@ -50,18 +52,22 @@ export class Counter extends Component {
         (hours * 60 * 60 + minutes * 60)
 
       this.setState({ hours, minutes, seconds })
+    } else {
+      this.setState({ status: 'VOTING PERIOD ENDED' })
     }
   }
 
   render() {
-    const { hours, minutes, seconds, difference } = this.state
+    const { hours, minutes, seconds, status } = this.state
     return (
       <div>
-        {difference > 0 && (
+        {hours !== null && minutes !== null && seconds !== null ? (
           <h1>
             {hours} <span>hours</span> {minutes} <span>minutes</span> {seconds}{' '}
             <span>seconds</span>
           </h1>
+        ) : (
+          <h1>{status} </h1>
         )}
       </div>
     )
@@ -71,4 +77,4 @@ const mapStateToProps = (state) => ({
   votingDeadline: state.elections.votingDeadline
 })
 
-export default connect(mapStateToProps, undefined)(Counter)
+export default connect(mapStateToProps, { endElection })(Counter)

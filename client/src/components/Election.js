@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 
 function Election({ election }) {
-  const [electionStatus, setStatus] = useState('NO ELECTION CREATED YET')
+  const [electionStatus, setStatus] = useState('')
   const { electionName, description, votingDeadline } = election
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function Election({ election }) {
       {electionStatus && <h2>{electionStatus}</h2>}
       {electionName && <p>{electionName}</p>}
       {description && <p>{description}</p>}
-      {votingDeadline && electionName && (
+      {votingDeadline !== 0 && electionName && (
         <p>{moment.unix(votingDeadline).format('MMM Do YY, h:mm:ss a')}</p>
       )}
     </div>

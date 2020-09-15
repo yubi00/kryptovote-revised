@@ -58,7 +58,7 @@ export class Vote extends Component {
       <div>
         <h1>Cast vote to your favourite candidate</h1>
         {electionName && <h2>{electionName}</h2>}
-        {votingDeadline && electionName && (
+        {votingDeadline !== 0 && electionName && (
           <h2>
             Voting Deadline:
             {moment.unix(votingDeadline).format('MMM Do YY, h:mm:ss a')}

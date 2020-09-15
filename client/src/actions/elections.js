@@ -22,3 +22,7 @@ export const addElection = (election) => ({
   type: 'ADD_ELECTION',
   payload: election
 })
+
+export const endElection = () => ({
+  type: 'END_ELECTION'
+})
