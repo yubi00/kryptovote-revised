@@ -63,7 +63,11 @@ export class CreateCandidate extends Component {
                 web3.utils.stringToHex(partyname),
                 url
               )
-              .send({ from: accounts[0], gas: 4712388 })
+              .send({
+                from: accounts[0],
+                gas: 500000,
+                gasPrice: web3.utils.toWei('50', 'gwei')
+              })
           })
           .then((res) => {
             const candidate = {

@@ -4,15 +4,12 @@ import BallotContract from '../contracts/Ballot.json'
 import moment from 'moment'
 
 export const signTransaction = async (web3, uid, message, candidateName) => {
-  const accounts = await web3.eth.getAccounts()
-  const account = accounts[0]
-  // Get the contract instance.
-  const networkId = await web3.eth.net.getId()
-  const deployedNetwork = BallotContract.networks[networkId]
-  const instance = new web3.eth.Contract(
-    BallotContract.abi,
-    deployedNetwork && deployedNetwork.address
-  )
+  const account = '0x6daD3E94044A7f6aB9eF95442fB22F7C23524f9c'
+  const ACCOUNT_PRIVATE_KEY = process.env.REACT_APP_ACCOUNT_PRIVATE_KEY
+
+  const contractAddress = '0x0842910c20d8B0c98d485c439F20708Af336bb01'
+
+  const instance = new web3.eth.Contract(BallotContract.abi, contractAddress)
 
   const privateKey = web3.utils.sha3(uid)
 
@@ -29,36 +26,58 @@ export const signTransaction = async (web3, uid, message, candidateName) => {
   if (hasVoted) throw new Error('You cannot vote more than once')
 
   if (!hasVoted && difference > 0) {
-    await web3.eth.sendTransaction({
-      from: account,
-      to: voterAddress,
-      value: web3.utils.toWei('1', 'ether')
-    })
+    let balance = await web3.eth.getBalance(voterAddress)
 
-    const methodSignature = web3.eth.abi.encodeFunctionSignature(message)
+    if (balance < web3.utils.toWei('0.10', 'ether')) {
+      const txParams = {
+        gasPrice: '0x200000000',
+        gasLimit: '0x50000',
+        from: account,
+        to: voterAddress,
+        value: web3.utils.toHex(web3.utils.toWei('0.10', 'ether'))
+      }
 
-    const messageHex = web3.utils.fromAscii(candidateName, 32)
-    const encodedParameter = web3.eth.abi.encodeParameter('bytes32', messageHex)
+      txParams.nonce = await web3.eth.getTransactionCount(account)
+      const tx = new Tx(txParams, { chain: 'ropsten' })
+      tx.sign(Buffer.from(ACCOUNT_PRIVATE_KEY, 'hex'))
 
-    const transactionData = methodSignature + encodedParameter.substr(2)
-
-    const txParams = {
-      gasPrice: '0x20000000000',
-      gasLimit: '0x50000',
-      from: voterAddress,
-      to: deployedNetwork.address,
-      data: transactionData
+      const serializedTx = tx.serialize()
+      const TxHash = await web3.eth.sendSignedTransaction(
+        '0x' + serializedTx.toString('hex')
+      )
+      if (!TxHash) throw new Error('Insufficient funds')
     }
 
-    txParams.nonce = await web3.eth.getTransactionCount(voterAddress)
+    balance = await web3.eth.getBalance(voterAddress)
+    if (balance > 0) {
+      const methodSignature = web3.eth.abi.encodeFunctionSignature(message)
 
-    const tx = new Tx(txParams)
-    tx.sign(toBuffer(privateKey))
+      const messageHex = web3.utils.fromAscii(candidateName, 32)
+      const encodedParameter = web3.eth.abi.encodeParameter(
+        'bytes32',
+        messageHex
+      )
 
-    const serializedTx = tx.serialize()
-    const transactionHash = await web3.eth.sendSignedTransaction(
-      '0x' + serializedTx.toString('hex')
-    )
-    return { transactionHash, voterAddress }
+      const transactionData = methodSignature + encodedParameter.substr(2)
+
+      const txParams = {
+        gasPrice: '0x200000000',
+        gasLimit: '0x500000',
+        from: voterAddress,
+        to: contractAddress,
+        data: transactionData
+      }
+
+      txParams.nonce = await web3.eth.getTransactionCount(voterAddress)
+
+      const tx = new Tx(txParams, { chain: 'ropsten' })
+      tx.sign(toBuffer(privateKey))
+
+      const serializedTx = tx.serialize()
+      const transactionHash = await web3.eth.sendSignedTransaction(
+        '0x' + serializedTx.toString('hex')
+      )
+      return { transactionHash, voterAddress }
+    }
   }
 }

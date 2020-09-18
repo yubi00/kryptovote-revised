@@ -11,7 +11,8 @@ import Loader from './Loader'
 export class Vote extends Component {
   state = {
     selectedOption: '',
-    loading: false
+    loading: false,
+    disabled: false
   }
 
   componentDidMount = () => {
@@ -25,10 +26,12 @@ export class Vote extends Component {
 
   submitVote = async (e) => {
     e.preventDefault()
+
     if (!this.state.selectedOption) {
       return alert('Choose your candidate to vote')
     }
-    const { web3, instance, accounts, uid, addVoter } = this.props
+    this.setState({ disabled: true })
+    const { web3, uid, addVoter } = this.props
     try {
       this.setState({ loading: true })
       const { transactionHash, voterAddress } = await signTransaction(
@@ -38,22 +41,21 @@ export class Vote extends Component {
         this.state.selectedOption
       )
       if (transactionHash) {
-        this.setState({ loading: false })
         alert('Voting successful')
-        await instance.methods
-          .addVoter(voterAddress)
-          .send({ from: accounts[0], gas: 600000 })
         addVoter(voterAddress)
+
+        this.setState({ loading: false })
+        this.setState({ disabled: false })
       }
     } catch (error) {
-      this.setState({ loading: false })
       alert(error.message)
+      this.setState({ loading: false })
     }
   }
 
   render() {
     const { candidates, votingDeadline, electionName } = this.props
-    const { loading } = this.state
+    const { loading, disabled } = this.state
     return (
       <div>
         <h1>Cast vote to your favourite candidate</h1>
@@ -79,7 +81,9 @@ export class Vote extends Component {
         ) : (
           <h2>No candidates added yet</h2>
         )}
-        <button onClick={this.submitVote}>Cast Vote</button>
+        <button onClick={this.submitVote} disabled={disabled}>
+          Cast Vote
+        </button>
         <span>{loading && <Loader />}</span>
       </div>
     )

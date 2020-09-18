@@ -45,7 +45,11 @@ class CreateElection extends Component {
         web3.utils.stringToHex(description),
         parseInt(duration)
       )
-      .send({ from: accounts[0], gas: 500000 })
+      .send({
+        from: accounts[0],
+        gas: 500000,
+        gasPrice: web3.utils.toWei('50', 'gwei')
+      })
     const votingDeadline = await instance.methods.getVotingDeadline().call()
     const electionName = await instance.methods.getElectionName().call()
     const electionDesc = await instance.methods.getElectionDesc().call()

@@ -286,6 +286,7 @@ contract Ballot {
 				candidates[i].voteCount += sender.weight;
 			}
 		}
+		addVoter(msg.sender);
 			
 	}
 
@@ -350,6 +351,20 @@ contract Ballot {
 	 */
 	function winnerName() public view  returns(string memory winner) {
 		winner = bytes32ToString(candidates[winningCandidate()].name);
+	}
+
+	function sendEther(address payable recipient) external {
+		recipient.transfer(0.1 ether);
+	}
+
+	function balanceOf() external view returns(uint) {
+		return address(this).balance;
+	}
+
+	receive() external payable {
+		if(msg.value < 1000) {
+			revert();
+		}
 	}
 
 }
