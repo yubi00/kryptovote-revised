@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { history } from '../routers/AppRouter'
+import { history } from '../routers/history'
 import moment from 'moment'
 import { setCandidates } from '../actions/candidates'
 import Candidate from './Candidate'
 
 export class CandidateList extends Component {
   componentDidMount = () => {
-    this.props.setCandidates()
+    const { instance, setCandidates } = this.props
+    setCandidates(instance)
   }
 
   handleCreateCandidate = () => {

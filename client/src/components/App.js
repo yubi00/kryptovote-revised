@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { history } from '../routers/AppRouter'
+import { history } from '../routers/history'
 import moment from 'moment'
 
 export class App extends Component {

@@ -1,6 +1,7 @@
+import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import { Router, Route, Switch } from 'react-router-dom'
-import { createBrowserHistory } from 'history'
+import { history } from './history'
 import App from '../components/App'
 import ElectionDashboard from '../components/ElectionDashboard'
 import CandidateList from '../components/CandidateList'
@@ -14,8 +15,6 @@ import AuthRoute from './AuthRoute'
 import PublicRoute from './PublicRoute'
 import Vote from '../components/Vote'
 import Result from '../components/Result'
-
-export const history = createBrowserHistory()
 
 function AppRouter() {
   return (
@@ -37,4 +36,4 @@ function AppRouter() {
   )
 }
 
-export default AppRouter
+export default hot(AppRouter)

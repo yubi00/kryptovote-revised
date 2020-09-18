@@ -10,7 +10,7 @@ class AdminDashboard extends Component {
 
     return (
       <div className="App">
-        <h1>Shape your world by Voting here</h1>
+        <h1>Admin Dashboard</h1>
         <h2>Your Account: </h2>
         {accounts && accounts.map((account) => <p key={account}>{account}</p>)}
       </div>

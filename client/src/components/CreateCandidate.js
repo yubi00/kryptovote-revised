@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
 import { addCandidate } from '../actions/candidates'
-import { history } from '../routers/AppRouter'
+import { history } from '../routers/history'
 import Loader from './Loader'
 
 export class CreateCandidate extends Component {

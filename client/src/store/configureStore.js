@@ -1,14 +1,8 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import authReducer from '../reducers/auth'
-import web3Reducer from '../reducers/web3'
-import electionReducer from '../reducers/elections'
-import candidateReducer from '../reducers/candidates'
-import errorReducer from '../reducers/errors'
-import voterReducer from '../reducers/voters'
-import resultsReducer from '../reducers/results'
+import rootReducer from '../reducers/rootReducer'
 
 import { transformCircular } from '../utils/transform'
 
@@ -21,16 +15,6 @@ const persistConfig = {
   transforms: [transformCircular]
 }
 
-const rootReducer = combineReducers({
-  web3: web3Reducer,
-  elections: electionReducer,
-  candidates: candidateReducer,
-  auth: authReducer,
-  error: errorReducer,
-  voters: voterReducer,
-  results: resultsReducer
-})
-
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export default () => {
@@ -39,6 +23,14 @@ export default () => {
     composeEnhancer(applyMiddleware(thunk))
   )
   let persistor = persistStore(store)
+
+  if (module.hot) {
+    module.hot.accept('../reducers/rootReducer', () => {
+      // This fetch the new state of the above reducers.
+      const nextRootReducer = require('../reducers/rootReducer').default
+      store.replaceReducer(persistReducer(persistConfig, nextRootReducer))
+    })
+  }
 
   return { store, persistor }
 }

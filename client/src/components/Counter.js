@@ -38,8 +38,9 @@ export class Counter extends Component {
     }, 1000)
   }
 
-  getTimeLeft = () => {
-    const { votingDeadline } = this.props
+  getTimeLeft = async () => {
+    const { instance } = this.props
+    const votingDeadline = await instance.methods.getVotingDeadline().call()
     const currentTime = moment()
     const votingEndTime = moment.unix(votingDeadline)
     const difference = votingEndTime.diff(currentTime, 'seconds')
@@ -74,7 +75,7 @@ export class Counter extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  votingDeadline: state.elections.votingDeadline
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, { endElection })(Counter)

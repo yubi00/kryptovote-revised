@@ -4,15 +4,15 @@ import { loadVoters } from '../actions/voters'
 
 export class Voter extends Component {
   componentDidMount = () => {
-    const { loadVoters } = this.props
-    loadVoters()
+    const { loadVoters, instance } = this.props
+    loadVoters(instance)
   }
 
   render() {
     const { voters } = this.props
     return (
       <div>
-        <h1>Voters Dashboard</h1>
+        <h1>List of all the Voters</h1>
         {voters.length === 0 ? (
           <h2>No voters yet</h2>
         ) : (
@@ -29,7 +29,8 @@ export class Voter extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  voters: state.voters
+  voters: state.voters,
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, { loadVoters })(Voter)

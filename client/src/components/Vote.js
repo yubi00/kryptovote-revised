@@ -16,8 +16,8 @@ export class Vote extends Component {
   }
 
   componentDidMount = () => {
-    this.props.setElection()
-    this.props.setCandidates()
+    this.props.setElection(this.props.instance)
+    this.props.setCandidates(this.props.instance)
   }
 
   setValue = (selectedOption) => {
@@ -58,7 +58,7 @@ export class Vote extends Component {
     const { loading, disabled } = this.state
     return (
       <div>
-        <h1>Cast vote to your favourite candidate</h1>
+        <h1>Cast vote to your favourite Component</h1>
         {electionName && <h2>{electionName}</h2>}
         {votingDeadline !== 0 && electionName && (
           <h2>

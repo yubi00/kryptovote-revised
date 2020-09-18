@@ -6,10 +6,10 @@ import { getWinner } from '../actions/results'
 
 export class Result extends Component {
   componentDidMount = async () => {
-    const { setResults, getWinner } = this.props
+    const { setResults, getWinner, instance } = this.props
 
-    setResults(this.props.candidates)
-    getWinner()
+    setResults(instance, this.props.candidates)
+    getWinner(instance)
   }
 
   render() {
@@ -29,7 +29,8 @@ export class Result extends Component {
 }
 const mapStateToProps = (state) => ({
   candidates: state.candidates,
-  results: state.results
+  results: state.results,
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, {

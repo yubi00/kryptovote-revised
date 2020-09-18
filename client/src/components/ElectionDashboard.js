@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import Election from './Election'
 import { setElection } from '../actions/elections'
-import { history } from '../routers/AppRouter'
+import { history } from '../routers/history'
 
 export class ElectionDashboard extends Component {
   componentDidMount = () => {
-    this.props.setElection()
+    const { setElection, instance } = this.props
+    setElection(instance)
   }
 
   handleResults = async (e) => {
@@ -45,7 +46,7 @@ export class ElectionDashboard extends Component {
 
     return (
       <div>
-        <h1>Election Dashboard </h1>
+        <h1>Election Dashboard</h1>
         <button onClick={this.handleCreateElection}>Create</button>
         <Election election={election} />
         <button onClick={this.handleResults}>View Results</button>
@@ -57,7 +58,8 @@ export class ElectionDashboard extends Component {
 const mapStateToProps = (state) => ({
   votingDeadline: state.elections.votingDeadline,
   electionName: state.elections.electionName,
-  description: state.elections.electionDesc
+  description: state.elections.electionDesc,
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, { setElection })(ElectionDashboard)

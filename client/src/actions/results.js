@@ -1,9 +1,5 @@
-import { getInstance } from '../utils/getInstance'
-
-export const getWinner = () => {
+export const getWinner = (instance) => {
   return async (dispatch) => {
-    const { instance } = await getInstance()
-
     try {
       const winnerName = await instance.methods.winnerName().call()
       dispatch({
@@ -11,19 +7,22 @@ export const getWinner = () => {
         winnerName
       })
     } catch (error) {
-      console.log(error.message)
+      return
     }
   }
 }
 
-export const setResults = (candidates) => {
+export const setResults = (instance, candidates) => {
   return async (dispatch) => {
-    const { instance } = await getInstance()
-    for (let i = 0; i < candidates.length; i++) {
-      const voteCount = await instance.methods.getCandidateVoteCount(i).call()
-      candidates[i] = { ...candidates[i], voteCount: parseInt(voteCount) }
+    try {
+      for (let i = 0; i < candidates.length; i++) {
+        const voteCount = await instance.methods.getCandidateVoteCount(i).call()
+        candidates[i] = { ...candidates[i], voteCount: parseInt(voteCount) }
+      }
+      dispatch({ type: 'SET_RESULTS', candidates })
+    } catch (error) {
+      return
     }
-    dispatch({ type: 'SET_RESULTS', candidates })
   }
 }
 

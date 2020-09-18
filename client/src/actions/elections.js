@@ -1,9 +1,7 @@
-import { getInstance } from '../utils/getInstance'
-
-export const setElection = () => {
+export const setElection = (instance) => {
   return async (dispatch) => {
     try {
-      const { instance } = await getInstance()
+      //const { instance } = await getInstance()
       const electionName = await instance.methods.getElectionName().call()
       const votingDeadline = await instance.methods.getVotingDeadline().call()
       const electionDesc = await instance.methods.getElectionDesc().call()
@@ -13,7 +11,7 @@ export const setElection = () => {
         payload: { electionName, electionDesc, votingDeadline }
       })
     } catch (error) {
-      console.log(error.message)
+      return
     }
   }
 }
