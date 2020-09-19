@@ -7,22 +7,28 @@ import moment from 'moment'
 export class App extends Component {
   handleResults = async (e) => {
     e.preventDefault()
-    const { votingDeadline } = this.props
+    const { instance } = this.props
+    try {
+      const votingDeadline = await instance.methods.getVotingDeadline().call()
+      const currentTime = moment().valueOf()
+      const difference =
+        parseInt(votingDeadline) - Math.floor(currentTime / 1000)
+      this.setState({ difference })
 
-    const currentTime = moment().valueOf()
-    const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
-    this.setState({ difference })
-
-    if (difference > 0) {
-      alert('You cannot view result now')
-    } else {
-      history.push('/results')
+      if (difference > 0) {
+        alert('You cannot view result now')
+      } else {
+        history.push('/results')
+      }
+    } catch (error) {
+      return
     }
   }
 
   render() {
-    const { isAuthenticated, web3 } = this.props
-    if (!web3) return <div>Loading web3, accounts and contract instance...</div>
+    const { isAuthenticated, web3, instance } = this.props
+    if (!web3 || !instance)
+      return <div>Loading web3, accounts and contract instance...</div>
     return (
       <div>
         <h1>Welcome to KryptoVote Fellas !!</h1>
@@ -39,7 +45,7 @@ export class App extends Component {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   web3: state.web3.web3,
-  votingDeadline: state.elections.votingDeadline
+  instance: state.web3.instance
 })
 
 export default connect(mapStateToProps, undefined)(App)

@@ -40,21 +40,25 @@ export class Counter extends Component {
 
   getTimeLeft = async () => {
     const { instance } = this.props
-    const votingDeadline = await instance.methods.getVotingDeadline().call()
-    const currentTime = moment()
-    const votingEndTime = moment.unix(votingDeadline)
-    const difference = votingEndTime.diff(currentTime, 'seconds')
+    try {
+      const votingDeadline = await instance.methods.getVotingDeadline().call()
+      const currentTime = moment()
+      const votingEndTime = moment.unix(votingDeadline)
+      const difference = votingEndTime.diff(currentTime, 'seconds')
 
-    if (difference > 0) {
-      const hours = votingEndTime.diff(currentTime, 'hours')
-      const minutes = votingEndTime.diff(currentTime, 'minutes') - hours * 60
-      const seconds =
-        votingEndTime.diff(currentTime, 'seconds') -
-        (hours * 60 * 60 + minutes * 60)
+      if (difference > 0) {
+        const hours = votingEndTime.diff(currentTime, 'hours')
+        const minutes = votingEndTime.diff(currentTime, 'minutes') - hours * 60
+        const seconds =
+          votingEndTime.diff(currentTime, 'seconds') -
+          (hours * 60 * 60 + minutes * 60)
 
-      this.setState({ hours, minutes, seconds })
-    } else {
-      this.setState({ status: 'VOTING PERIOD ENDED' })
+        this.setState({ hours, minutes, seconds })
+      } else {
+        this.setState({ status: 'VOTING PERIOD ENDED' })
+      }
+    } catch (error) {
+      return
     }
   }
 
