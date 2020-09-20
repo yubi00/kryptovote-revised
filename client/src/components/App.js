@@ -5,6 +5,7 @@ import moment from 'moment'
 import '../styles/App.css'
 import { Container, Row, Col } from 'reactstrap'
 import Option from './Option'
+import '../styles/App.css'
 
 export class App extends Component {
   handleResults = async (e) => {

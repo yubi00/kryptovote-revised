@@ -1,0 +1,28 @@
+.candidate {
+    display: flex;
+    padding: 30px;
+    background-color: lightgray;
+    margin-bottom: 0;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+.avatar > img {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+
+}
+
+.candidate-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 2;
+}
+.candidate-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

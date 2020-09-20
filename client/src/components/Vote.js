@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import moment from 'moment'
 import Candidate from './Candidate'
 import { signTransaction } from '../utils/signTransaction'
 import { addVoter } from '../actions/voters'
 import { setElection } from '../actions/elections'
 import { setCandidates } from '../actions/candidates'
 import Loader from './Loader'
+import { Container, Button } from 'reactstrap'
+import '../styles/Election.css'
 
 export class Vote extends Component {
   state = {
@@ -50,22 +51,18 @@ export class Vote extends Component {
     } catch (error) {
       alert(error.message)
       this.setState({ loading: false })
+      this.setState({ disabled: false })
     }
   }
 
   render() {
-    const { candidates, votingDeadline, electionName } = this.props
+    const { candidates, electionName } = this.props
     const { loading, disabled } = this.state
     return (
-      <div>
-        <h1>Cast vote to your favourite Candidate</h1>
-        {electionName && <h2>{electionName}</h2>}
-        {votingDeadline !== 0 && electionName && (
-          <h2>
-            Voting Deadline:
-            {moment.unix(votingDeadline).format('MMM Do YY, h:mm:ss a')}
-          </h2>
-        )}
+      <Container className="mb-5">
+        <div className="election-info">
+          {electionName && <h1 className="election-title">{electionName}</h1>}
+        </div>
 
         {candidates ? (
           candidates.map((candidate, i) => {
@@ -81,18 +78,22 @@ export class Vote extends Component {
         ) : (
           <h2>No candidates added yet</h2>
         )}
-        <button onClick={this.submitVote} disabled={disabled}>
-          Cast Vote
-        </button>
-        <span>{loading && <Loader />}</span>
-      </div>
+        <Button
+          onClick={this.submitVote}
+          disabled={disabled}
+          color="primary"
+          block
+          size="lg"
+        >
+          {loading ? <Loader /> : 'Cast Vote'}
+        </Button>
+      </Container>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
   candidates: state.candidates,
-  votingDeadline: state.elections.votingDeadline,
   electionName: state.elections.electionName,
   uid: state.auth.user.uid,
   web3: state.web3.web3,

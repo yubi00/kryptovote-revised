@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Container } from 'reactstrap'
 import Candidate from './Candidate'
 import { setResults } from '../actions/results'
 import { getWinner } from '../actions/results'
+import '../styles/Election.css'
 
 export class Result extends Component {
   componentDidMount = async () => {
@@ -16,14 +18,15 @@ export class Result extends Component {
     const { results } = this.props
 
     return (
-      <div>
-        <h1>Result of the election</h1>
-        {results.winnerName && <h1>{`Congrats ${results.winnerName}`}</h1>}
+      <Container className="mb-5">
+        {results.winnerName && (
+          <h1 className="election-title">{`Congrats ${results.winnerName}`}</h1>
+        )}
         {results.candidates &&
           results.candidates.map((candidate, i) => (
             <Candidate key={i} candidate={candidate} />
           ))}
-      </div>
+      </Container>
     )
   }
 }

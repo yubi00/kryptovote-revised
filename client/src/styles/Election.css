@@ -1,0 +1,11 @@
+.election-info {
+    justify-content: center;
+    align-items: center;
+}
+
+.election-title {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #008cff;
+    color: white;
+}

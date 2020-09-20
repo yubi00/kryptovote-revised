@@ -23,7 +23,7 @@ export class Login extends Component {
   }
 
   componentDidUpdate = async (prevProps) => {
-    const { error, isAuthenticated, clearErrors } = this.props
+    const { error, isAuthenticated } = this.props
     if (prevProps.error !== error) {
       if (error.id === 'LOGIN_FAIL') {
         this.setState({ message: error.message })
@@ -100,4 +100,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps, { loginUser, clearErrors })(Login)
+export default connect(mapStateToProps, { loginUser })(Login)
