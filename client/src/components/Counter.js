@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { endElection } from '../actions/elections'
-
+import { Container } from 'reactstrap'
 export class Counter extends Component {
   state = {
     hours: null,
@@ -65,7 +65,7 @@ export class Counter extends Component {
   render() {
     const { hours, minutes, seconds, status } = this.state
     return (
-      <div>
+      <Container fluid className="mb-5 text-center bg-light p-5 text-dark">
         {hours !== null && minutes !== null && seconds !== null ? (
           <h1>
             {hours} <span>hours</span> {minutes} <span>minutes</span> {seconds}{' '}
@@ -74,7 +74,7 @@ export class Counter extends Component {
         ) : (
           <h1>{status} </h1>
         )}
-      </div>
+      </Container>
     )
   }
 }

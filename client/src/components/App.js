@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { history } from '../routers/history'
 import moment from 'moment'
+import '../styles/App.css'
+import { Container, Row, Col } from 'reactstrap'
+import Option from './Option'
 
 export class App extends Component {
   handleResults = async (e) => {
@@ -25,18 +27,59 @@ export class App extends Component {
     }
   }
 
+  handleGuide = (e) => {
+    e.preventDefault()
+    history.push('/guide')
+  }
+
+  handleVoting = (e) => {
+    e.preventDefault()
+    history.push('/vote')
+  }
+
   render() {
     const { isAuthenticated, web3, instance } = this.props
     if (!web3 || !instance)
       return <div>Loading web3, accounts and contract instance...</div>
     return (
       <div>
-        <h1>Welcome to KryptoVote Fellas !!</h1>
-        {!isAuthenticated && <h2>Login to your accout to get started</h2>}
-        {isAuthenticated && <Link to="/vote">Vote here</Link>}
-        {isAuthenticated && (
-          <button onClick={this.handleResults}>View Results</button>
-        )}
+        <Container>
+          <Row>
+            <Col xl="4">
+              <Option
+                buttonLabel="Guide"
+                title="How to Vote"
+                subtitle="Steps to voting"
+                text="Click the button below to get started to the voting process of the kryptovote system"
+                img="/img/voting.jpg"
+                handleClick={this.handleGuide}
+                disabled={false}
+              />
+            </Col>
+            <Col xl="4">
+              <Option
+                buttonLabel="Vote here"
+                title="Vote here"
+                subtitle="voting ballot"
+                text="Click the button below to cast vote to your favourtie candidate within voting period"
+                img="/img/votingprocess.jpg"
+                handleClick={this.handleVoting}
+                disabled={!isAuthenticated ? true : false}
+              />
+            </Col>
+            <Col xl="4">
+              <Option
+                buttonLabel="View Result"
+                title="Election result"
+                subtitle="result of the election"
+                text="Click the button below to view the result of election after voting period ends"
+                img="/img/result.jpg"
+                handleClick={this.handleResults}
+                disabled={!isAuthenticated ? true : false}
+              />
+            </Col>
+          </Row>
+        </Container>
       </div>
     )
   }

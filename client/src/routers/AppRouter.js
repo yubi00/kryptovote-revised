@@ -15,6 +15,8 @@ import AuthRoute from './AuthRoute'
 import PublicRoute from './PublicRoute'
 import Vote from '../components/Vote'
 import Result from '../components/Result'
+import HowTo from '../components/HowTo'
+import Footer from '../components/Footer'
 
 function AppRouter() {
   return (
@@ -29,9 +31,11 @@ function AppRouter() {
         <AuthRoute path="/createcandidate" component={CreateCandidate} />
         <AuthRoute path="/voter" component={Voter} />
         <AuthRoute path="/vote" component={Vote} />
+        <Route path="/guide" component={HowTo} />
         <AuthRoute path="/results" component={Result} />
         <Route component={NotFound} />
       </Switch>
+      <Footer />
     </Router>
   )
 }

@@ -6,6 +6,7 @@ import configureStore from './store/configureStore'
 import AppRouter from './routers/AppRouter'
 import * as serviceWorker from './serviceWorker'
 import { loadWeb3 } from './actions/web3Actions'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const { store, persistor } = configureStore()
 store

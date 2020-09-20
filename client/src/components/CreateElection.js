@@ -38,31 +38,37 @@ class CreateElection extends Component {
         message: 'Please provide both title and duration'
       })
     }
-    this.setState({ loading: true })
-    await instance.methods
-      .createElection(
-        web3.utils.stringToHex(title),
-        web3.utils.stringToHex(description),
-        parseInt(duration)
-      )
-      .send({
-        from: accounts[0],
-        gas: 500000,
-        gasPrice: web3.utils.toWei('50', 'gwei')
+    try {
+      this.setState({ loading: true })
+      await instance.methods
+        .createElection(
+          web3.utils.stringToHex(title),
+          web3.utils.stringToHex(description),
+          parseInt(duration)
+        )
+        .send({
+          from: accounts[0],
+          gas: 500000,
+          gasPrice: web3.utils.toWei('60', 'gwei')
+        })
+      const votingDeadline = await instance.methods.getVotingDeadline().call()
+      const electionName = await instance.methods.getElectionName().call()
+      const electionDesc = await instance.methods.getElectionDesc().call()
+      addElection({
+        electionName,
+        electionDesc,
+        votingDeadline
       })
-    const votingDeadline = await instance.methods.getVotingDeadline().call()
-    const electionName = await instance.methods.getElectionName().call()
-    const electionDesc = await instance.methods.getElectionDesc().call()
-    addElection({
-      electionName,
-      electionDesc,
-      votingDeadline
-    })
-    resetResults()
-    resetVoters()
-    resetCandidates()
-    this.setState({ loading: false })
-    this.setState({ toElection: true })
+      resetResults()
+      resetVoters()
+      resetCandidates()
+      this.setState({ loading: false })
+      this.setState({ toElection: true })
+    } catch (error) {
+      this.setState({ loading: false })
+      this.setState({ disabled: false })
+      alert(error.message)
+    }
   }
 
   onChange = (e) => {
