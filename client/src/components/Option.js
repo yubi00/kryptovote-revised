@@ -8,6 +8,7 @@ import {
   CardSubtitle,
   Button
 } from 'reactstrap'
+import '../styles/Option.css'
 
 function Option({
   buttonLabel,
@@ -20,7 +21,7 @@ function Option({
 }) {
   return (
     <div>
-      <Card className="mb-5 pb-2 card-option h-100">
+      <Card className="mb-5 pb-2 card-option h-100 shadow option-card">
         <CardImg top src={img} alt="Card image cap" />
         <CardBody>
           <CardTitle>{title}</CardTitle>

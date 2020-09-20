@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
-import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { registerUser } from '../actions/auth'
-import { clearErrors } from '../actions/errors'
 import Loader from './Loader'
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert
+} from 'reactstrap'
 
 export class Register extends Component {
   state = {
@@ -14,7 +23,7 @@ export class Register extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    const { error, user, clearErrors } = this.props
+    const { error, user } = this.props
 
     if (prevProps.error !== error) {
       if (error.id === 'REGISTER_FAIL') {
@@ -25,9 +34,9 @@ export class Register extends Component {
       }
     }
     if (this.props.isModalOpen) {
-      if (user) {
-        clearErrors()
-        this.props.closeModal()
+      if (user !== prevProps.user) {
+        this.props.toggle()
+        this.props.toggleLogin()
         this.setState({ loading: false })
       }
     }
@@ -46,37 +55,43 @@ export class Register extends Component {
 
     this.setState({ loading: true })
     this.props.registerUser(email, password)
+    this.setState({ email: '', password: '' })
   }
 
   render() {
-    const { email, password, message, loading } = this.state
+    const { message, loading } = this.state
     return (
-      <Modal
-        isOpen={this.props.isModalOpen}
-        onRequestClose={this.props.closeModal}
-        ariaHideApp={false}
-        className="register-modal"
-      >
-        {message && <h2>{message}</h2>}
-        <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            placeholder="email"
-            name="email"
-            value={email}
-            onChange={this.onChange}
-          />
-          <input
-            type="password"
-            placeholder="password"
-            name="password"
-            value={password}
-            onChange={this.onChange}
-          />
-          <button>Register</button>
-          <div> {loading && <Loader />} </div>
-        </form>
-      </Modal>
+      <div>
+        <Modal isOpen={this.props.isModalOpen} toggle={this.props.toggle}>
+          <ModalHeader toggle={this.props.toggle}>Register</ModalHeader>
+          <ModalBody>
+            {message && <Alert color="danger">{message}</Alert>}
+            <Form onSubmit={this.onSubmit}>
+              <FormGroup>
+                <Label for="email">Email</Label>
+                <Input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="email"
+                  onChange={this.onChange}
+                />
+                <Label for="password">Password</Label>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="password"
+                  onChange={this.onChange}
+                />
+                <Button color="dark" style={{ marginTop: '2rem' }} block>
+                  {loading ? <Loader /> : 'Register'}
+                </Button>
+              </FormGroup>
+            </Form>
+          </ModalBody>
+        </Modal>
+      </div>
     )
   }
 }
@@ -86,4 +101,4 @@ const mapStateToProps = (state) => ({
   user: state.auth.user
 })
 
-export default connect(mapStateToProps, { registerUser, clearErrors })(Register)
+export default connect(mapStateToProps, { registerUser })(Register)

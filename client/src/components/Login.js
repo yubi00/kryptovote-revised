@@ -1,9 +1,18 @@
 import React, { Component } from 'react'
-import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import { loginUser } from '../actions/auth'
-import { clearErrors } from '../actions/errors'
 import Loader from './Loader'
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert
+} from 'reactstrap'
 
 export class Login extends Component {
   state = {
@@ -14,7 +23,7 @@ export class Login extends Component {
   }
 
   componentDidUpdate = async (prevProps) => {
-    const { error, isAuthenticated } = this.props
+    const { error, isAuthenticated, clearErrors } = this.props
     if (prevProps.error !== error) {
       if (error.id === 'LOGIN_FAIL') {
         this.setState({ message: error.message })
@@ -26,8 +35,7 @@ export class Login extends Component {
 
     if (this.props.isModalOpen) {
       if (isAuthenticated) {
-        this.props.clearErrors()
-        this.props.closeModal()
+        this.props.toggle()
         this.setState({ loading: false })
       }
     }
@@ -38,11 +46,12 @@ export class Login extends Component {
 
     const { email, password } = this.state
     if (!email || !password) {
-      return this.setState({ message: 'Both fields are required' })
+      return this.setState({ message: 'Please provide both required fields' })
     }
 
     this.setState({ loading: true })
     this.props.loginUser(email, password)
+    this.setState({ email: '', password: '' })
   }
 
   onChange = (e) => {
@@ -51,33 +60,36 @@ export class Login extends Component {
   }
 
   render() {
-    const { email, password, message, loading } = this.state
+    const { message, loading } = this.state
     return (
-      <Modal
-        isOpen={this.props.isModalOpen}
-        onRequestClose={this.props.closeModal}
-        ariaHideApp={false}
-        className="login-modal"
-      >
-        {message && <h2>{message} </h2>}
-        <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            placeholder="email"
-            name="email"
-            value={email}
-            onChange={this.onChange}
-          />
-          <input
-            type="password"
-            placeholder="password"
-            name="password"
-            value={password}
-            onChange={this.onChange}
-          />
-          <button>Login</button>
-          <div>{!this.props.isAuthenticated && loading && <Loader />}</div>
-        </form>
+      <Modal isOpen={this.props.isModalOpen} toggle={this.props.toggle}>
+        <ModalHeader toggle={this.props.toggle}>Login</ModalHeader>
+        <ModalBody>
+          {message && <Alert color="danger">{message}</Alert>}
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup>
+              <Label for="email">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="email"
+                onChange={this.onChange}
+              />
+              <Label for="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="password"
+                onChange={this.onChange}
+              />
+              <Button color="dark" style={{ marginTop: '2rem' }} block>
+                {loading ? <Loader /> : 'Login'}
+              </Button>
+            </FormGroup>
+          </Form>
+        </ModalBody>
       </Modal>
     )
   }

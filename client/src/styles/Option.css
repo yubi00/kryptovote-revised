@@ -1,0 +1,7 @@
+.option-card {
+    transition: trasform 100ms ease-in;
+}
+
+.option-card:hover {
+    transform: scale(1.02);
+}
