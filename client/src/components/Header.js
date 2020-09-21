@@ -70,7 +70,9 @@ function Header({ logout, admin, isAuthenticated, user, clearErrors }) {
           </Link>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
-            <Nav navbar>{!isAuthenticated ? AuthLinks : GuestLinks}</Nav>
+            <Nav className="ml-auto" navbar>
+              {!isAuthenticated ? AuthLinks : GuestLinks}
+            </Nav>
           </Collapse>
           <Register
             isModalOpen={isRegisterModalOpen}

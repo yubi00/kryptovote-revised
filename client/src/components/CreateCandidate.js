@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
-import { Container } from 'reactstrap'
+import {
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+  Button
+} from 'reactstrap'
 import { addCandidate } from '../actions/candidates'
 import { history } from '../routers/history'
 import Loader from './Loader'
@@ -18,6 +26,7 @@ export class CreateCandidate extends Component {
   }
 
   onChange = (e) => {
+    this.setState({ disabled: false })
     this.setState({ message: '' })
     this.setState({ [e.target.name]: e.target.value })
   }
@@ -81,41 +90,47 @@ export class CreateCandidate extends Component {
             history.push('/candidate')
           })
           .catch((e) => {
-            console.log(e.message)
+            this.setState({ message: e.message })
           })
       }
     )
   }
 
   render() {
-    const { candidatename, partyname, message, loading, disabled } = this.state
+    const { message, loading, disabled } = this.state
     return (
-      <Container>
-        {message && <h2>{message}</h2>}
-        <form onSubmit={this.onSubmit}>
-          <label>Candidate Name</label>
-          <input
-            type="text"
-            name="candidatename"
-            value={candidatename}
-            onChange={this.onChange}
-          />
-          <label>Party Name</label>
-          <input
-            type="text"
-            name="partyname"
-            value={partyname}
-            onChange={this.onChange}
-          />
-          <input
-            type="file"
-            name="image"
-            accept=".jpg, .png, .jpeg"
-            onChange={this.handleFileChange}
-          />
-          <button disabled={disabled}>Save</button>
-          <div>{loading && <Loader />}</div>
-        </form>
+      <Container className="mb-5">
+        {message && <Alert color="danger">{message}</Alert>}
+        <Form onSubmit={this.onSubmit} className="border p-4">
+          <FormGroup>
+            <Label for="candidatename">Candidate Name</Label>
+            <Input
+              type="candidatename"
+              name="candidatename"
+              id="candidatename"
+              placeholder="candidate name"
+              onChange={this.onChange}
+              className="mb-3"
+            />
+            <Label for="partyname">Party Name</Label>
+            <Input
+              type="partyname"
+              name="partyname"
+              id="partyname"
+              placeholder="partyname"
+              onChange={this.onChange}
+              className="mb-3"
+            />
+            <Input
+              type="file"
+              name="image"
+              accept=".jpg, .png, .jpeg"
+              onChange={this.handleFileChange}
+              className="mb-3"
+            />
+            <Button disabled={disabled}>{loading ? <Loader /> : 'Save'}</Button>
+          </FormGroup>
+        </Form>
       </Container>
     )
   }
