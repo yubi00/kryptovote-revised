@@ -27,6 +27,7 @@ export class Vote extends Component {
   onDissmiss = () => {
     this.setState({ visible: false })
     this.setState({ message: null })
+    this.setState({ success: null })
   }
 
   setValue = (selectedOption) => {
@@ -51,6 +52,7 @@ export class Vote extends Component {
       )
       if (transactionHash) {
         this.setState({ success: 'Voting Succesful' })
+        this.setState({ message: null })
         addVoter(voterAddress)
 
         this.setState({ loading: false })
@@ -58,6 +60,7 @@ export class Vote extends Component {
       }
     } catch (error) {
       this.setState({ message: error.message })
+      this.setState({ success: null })
       this.setState({ visible: true })
       this.setState({ loading: false })
       this.setState({ disabled: false })

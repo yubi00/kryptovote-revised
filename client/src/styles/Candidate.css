@@ -10,10 +10,9 @@
 }
 
 .avatar > img {
-    margin-right: 20px;
+    margin-right: 30px;
     display: flex;
     align-items: center;
-
 }
 
 .candidate-list {
@@ -24,7 +23,6 @@
 }
 .candidate-info {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
 }
