@@ -1,26 +1,27 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Container, Row } from 'reactstrap'
+import '../styles/App.css'
 
 class AdminDashboard extends Component {
   render() {
-    const { web3, accounts } = this.props
+    const { web3 } = this.props
     if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>
     }
 
     return (
-      <div className="App">
-        <h1>Admin Dashboard</h1>
-        <h2>Your Account: </h2>
-        {accounts && accounts.map((account) => <p key={account}>{account}</p>)}
-      </div>
+      <Container className="mb-5">
+        <Row>
+          <img src="/img/adminguides.png" alt="" className="guide-img" />
+        </Row>
+      </Container>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  web3: state.web3.web3,
-  accounts: state.web3.accounts
+  web3: state.web3.web3
 })
 
 export default connect(mapStateToProps, undefined)(AdminDashboard)

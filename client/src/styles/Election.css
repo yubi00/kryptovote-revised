@@ -9,3 +9,16 @@
     background-color: #008cff;
     color: white;
 }
+
+.election-dashboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    transition: transform 100ms ease-in;
+}
+
+.election-dashboard:hover {
+    transform: scale(1.02);
+}

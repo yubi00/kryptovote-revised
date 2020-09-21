@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Container } from 'reactstrap'
 import { loadVoters } from '../actions/voters'
 
 export class Voter extends Component {
@@ -11,8 +12,7 @@ export class Voter extends Component {
   render() {
     const { voters } = this.props
     return (
-      <div>
-        <h1>List of all the Voters</h1>
+      <Container>
         {voters.length === 0 ? (
           <h2>No voters yet</h2>
         ) : (
@@ -23,7 +23,7 @@ export class Voter extends Component {
             ))}
           </div>
         )}
-      </div>
+      </Container>
     )
   }
 }

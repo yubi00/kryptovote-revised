@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { storage } from '../firebase/firebase'
 import { connect } from 'react-redux'
+import { Container } from 'reactstrap'
 import { addCandidate } from '../actions/candidates'
 import { history } from '../routers/history'
 import Loader from './Loader'
@@ -89,8 +90,7 @@ export class CreateCandidate extends Component {
   render() {
     const { candidatename, partyname, message, loading, disabled } = this.state
     return (
-      <div>
-        <h1>Add Candidate</h1>
+      <Container>
         {message && <h2>{message}</h2>}
         <form onSubmit={this.onSubmit}>
           <label>Candidate Name</label>
@@ -116,7 +116,7 @@ export class CreateCandidate extends Component {
           <button disabled={disabled}>Save</button>
           <div>{loading && <Loader />}</div>
         </form>
-      </div>
+      </Container>
     )
   }
 }

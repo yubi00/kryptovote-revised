@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { history } from '../routers/history'
 import moment from 'moment'
+import { Container, Button } from 'reactstrap'
 import { setCandidates } from '../actions/candidates'
 import Candidate from './Candidate'
 
@@ -24,9 +25,15 @@ export class CandidateList extends Component {
   render() {
     const { candidates } = this.props
     return (
-      <div>
-        <h1>Candidate Dashboard</h1>
-        <button onClick={this.handleCreateCandidate}>Create</button>
+      <Container className="mb-5">
+        <Button
+          onClick={this.handleCreateCandidate}
+          color="info"
+          block
+          className="p-3"
+        >
+          Add a new Candidate
+        </Button>
         {candidates.length !== 0 ? (
           candidates.map((candidate, i) => (
             <Candidate key={i} candidate={candidate} />
@@ -34,7 +41,7 @@ export class CandidateList extends Component {
         ) : (
           <h2> No candidates added yet </h2>
         )}
-      </div>
+      </Container>
     )
   }
 }

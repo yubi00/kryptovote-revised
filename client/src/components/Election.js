@@ -22,8 +22,8 @@ function Election({ election }) {
   }, [votingDeadline])
 
   return (
-    <div>
-      {electionStatus && <h2>{electionStatus}</h2>}
+    <div className="text-light">
+      {electionStatus && <h5 className="mb-3">{electionStatus}</h5>}
       {electionName && <p>{electionName}</p>}
       {description && <p>{description}</p>}
       {votingDeadline !== 0 && electionName && (

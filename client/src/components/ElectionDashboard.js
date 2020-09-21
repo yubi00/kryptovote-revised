@@ -4,8 +4,19 @@ import moment from 'moment'
 import Election from './Election'
 import { setElection } from '../actions/elections'
 import { history } from '../routers/history'
+import { Container, Button, Alert } from 'reactstrap'
 
 export class ElectionDashboard extends Component {
+  state = {
+    message: null,
+    visible: true
+  }
+
+  onDissmiss = () => {
+    this.setState({ visible: false })
+    this.setState({ message: null })
+  }
+
   componentDidMount = () => {
     const { setElection, instance } = this.props
     setElection(instance)
@@ -20,7 +31,8 @@ export class ElectionDashboard extends Component {
     this.setState({ difference })
 
     if (difference > 0) {
-      alert('You cannot view result now')
+      this.setState({ message: 'Wait till the voting period ends' })
+      this.setState({ visible: true })
     } else {
       history.push('/results')
     }
@@ -34,7 +46,8 @@ export class ElectionDashboard extends Component {
     const difference = parseInt(votingDeadline) - Math.floor(currentTime / 1000)
 
     if (difference > 0) {
-      alert('Wait till the current election ends')
+      this.setState({ visible: true })
+      this.setState({ message: 'Wait till the voting period ends' })
     } else {
       history.push('/createelection')
     }
@@ -43,14 +56,28 @@ export class ElectionDashboard extends Component {
   render() {
     const { electionName, votingDeadline, description } = this.props
     const election = { electionName, votingDeadline, description }
-
+    const { visible, message } = this.state
     return (
-      <div>
-        <h1>Election Dashboard</h1>
-        <button onClick={this.handleCreateElection}>Create</button>
-        <Election election={election} />
-        <button onClick={this.handleResults}>View Results</button>
-      </div>
+      <Container className="mb-5 d-flex justify-content-center align-items-center flex-column">
+        {message && (
+          <Alert color="danger" isOpen={visible} toggle={this.onDissmiss}>
+            {message}
+          </Alert>
+        )}
+        <div className="election-dashboard bg-info p-5">
+          <Button
+            onClick={this.handleCreateElection}
+            block
+            className="p-2 mb-3"
+          >
+            Create a new Election
+          </Button>
+          <Election election={election} />
+          <Button onClick={this.handleResults} block>
+            View Results
+          </Button>
+        </div>
+      </Container>
     )
   }
 }

@@ -63,17 +63,14 @@ function Header({ logout, admin, isAuthenticated, user, clearErrors }) {
 
   return (
     <header>
-      <Navbar color="dark" dark expand="sm">
+      <Navbar color="dark" dark expand="md">
         <Container>
           <Link to="/">
             <img src="/img/logo.png" alt="" height="70px" />
           </Link>
           <NavbarToggler onClick={toggle} />
-
           <Collapse isOpen={isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              {!isAuthenticated ? AuthLinks : GuestLinks}
-            </Nav>
+            <Nav navbar>{!isAuthenticated ? AuthLinks : GuestLinks}</Nav>
           </Collapse>
           <Register
             isModalOpen={isRegisterModalOpen}
