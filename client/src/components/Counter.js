@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { endElection } from '../actions/elections'
 import { Container } from 'reactstrap'
+import CounterCard from './CounterCard'
+import '../styles/Counter.css'
+
 export class Counter extends Component {
   state = {
     hours: null,
@@ -67,12 +70,13 @@ export class Counter extends Component {
     return (
       <Container fluid className="mb-5 text-center bg-light p-5 text-dark">
         {hours !== null && minutes !== null && seconds !== null ? (
-          <h1>
-            {hours} <span>hours</span> {minutes} <span>minutes</span> {seconds}{' '}
-            <span>seconds</span>
-          </h1>
+          <div className="counter">
+            <CounterCard type={hours} title="Hours" />
+            <CounterCard type={minutes} title="Minutes" />
+            <CounterCard type={seconds} title="Seconds" />
+          </div>
         ) : (
-          <h1>{status} </h1>
+          <h1 className="text-dark">{status} </h1>
         )}
       </Container>
     )

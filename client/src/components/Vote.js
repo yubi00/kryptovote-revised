@@ -93,7 +93,9 @@ export class Vote extends Component {
           </Alert>
         )}
         <div className="election-info">
-          {electionName && <h1 className="election-title">{electionName}</h1>}
+          {electionName && (
+            <h1 className="election-title mb-0">{electionName}</h1>
+          )}
         </div>
 
         {candidates ? (
