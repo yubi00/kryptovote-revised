@@ -6,19 +6,26 @@ import { addVoter } from '../actions/voters'
 import { setElection } from '../actions/elections'
 import { setCandidates } from '../actions/candidates'
 import Loader from './Loader'
-import { Container, Button } from 'reactstrap'
+import { Container, Button, Alert } from 'reactstrap'
 import '../styles/Election.css'
 
 export class Vote extends Component {
   state = {
     selectedOption: '',
     loading: false,
-    disabled: false
+    disabled: false,
+    message: null,
+    visible: true
   }
 
   componentDidMount = () => {
     this.props.setElection(this.props.instance)
     this.props.setCandidates(this.props.instance)
+  }
+
+  onDissmiss = () => {
+    this.setState({ visible: false })
+    this.setState({ message: null })
   }
 
   setValue = (selectedOption) => {
@@ -29,7 +36,7 @@ export class Vote extends Component {
     e.preventDefault()
 
     if (!this.state.selectedOption) {
-      return alert('Choose your candidate to vote')
+      return this.setState({ message: 'Choose your candidate to vote' })
     }
     this.setState({ disabled: true })
     const { web3, uid, addVoter } = this.props
@@ -49,7 +56,8 @@ export class Vote extends Component {
         this.setState({ disabled: false })
       }
     } catch (error) {
-      alert(error.message)
+      this.setState({ message: error.message })
+      this.setState({ visible: true })
       this.setState({ loading: false })
       this.setState({ disabled: false })
     }
@@ -57,9 +65,19 @@ export class Vote extends Component {
 
   render() {
     const { candidates, electionName } = this.props
-    const { loading, disabled } = this.state
+    const { loading, disabled, message, visible } = this.state
     return (
       <Container className="mb-5">
+        {message && (
+          <Alert
+            className="p-3"
+            color="danger"
+            isOpen={visible}
+            toggle={this.onDissmiss}
+          >
+            {message}
+          </Alert>
+        )}
         <div className="election-info">
           {electionName && <h1 className="election-title">{electionName}</h1>}
         </div>

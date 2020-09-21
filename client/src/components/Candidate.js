@@ -27,7 +27,7 @@ function Candidate({ candidate, location, selectedOption, setValue }) {
               id={candidate.candidatename}
               checked={selectedOption === candidate.candidatename}
               onChange={onChange}
-              style={{ height: '80px', width: '80px' }}
+              style={{ height: '60px', width: '60px' }}
             />
           </div>
         )}
