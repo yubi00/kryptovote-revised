@@ -15,6 +15,7 @@ export class Vote extends Component {
     loading: false,
     disabled: false,
     message: null,
+    success: null,
     visible: true
   }
 
@@ -49,7 +50,7 @@ export class Vote extends Component {
         this.state.selectedOption
       )
       if (transactionHash) {
-        alert('Voting successful')
+        this.setState({ success: 'Voting Succesful' })
         addVoter(voterAddress)
 
         this.setState({ loading: false })
@@ -65,7 +66,7 @@ export class Vote extends Component {
 
   render() {
     const { candidates, electionName } = this.props
-    const { loading, disabled, message, visible } = this.state
+    const { loading, disabled, message, success, visible } = this.state
     return (
       <Container className="mb-5">
         {message && (
@@ -76,6 +77,16 @@ export class Vote extends Component {
             toggle={this.onDissmiss}
           >
             {message}
+          </Alert>
+        )}
+        {success && (
+          <Alert
+            className="p-3"
+            color="success"
+            isOpen={visible}
+            toggle={this.onDissmiss}
+          >
+            {success}
           </Alert>
         )}
         <div className="election-info">

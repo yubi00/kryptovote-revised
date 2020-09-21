@@ -3,11 +3,16 @@ import { connect } from 'react-redux'
 import { history } from '../routers/history'
 import moment from 'moment'
 import '../styles/App.css'
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col, Alert } from 'reactstrap'
 import Option from './Option'
 import '../styles/App.css'
 
 export class App extends Component {
+  state = {
+    message: null,
+    dismiss: true
+  }
+
   handleResults = async (e) => {
     e.preventDefault()
     const { instance } = this.props
@@ -19,7 +24,8 @@ export class App extends Component {
       this.setState({ difference })
 
       if (difference > 0) {
-        alert('You cannot view result now')
+        this.setState({ message: 'Wait till the voting period ends' })
+        this.setState({ visible: true })
       } else {
         history.push('/results')
       }
@@ -38,13 +44,29 @@ export class App extends Component {
     history.push('/vote')
   }
 
+  onDissmiss = () => {
+    this.setState({ visible: false })
+    this.setState({ message: null })
+  }
+
   render() {
     const { isAuthenticated, web3, instance } = this.props
+    const { message, visible } = this.state
     if (!web3 || !instance)
       return <div>Loading web3, accounts and contract instance...</div>
     return (
       <div>
         <Container>
+          {message && (
+            <Alert
+              className="p-3"
+              color="danger"
+              isOpen={visible}
+              toggle={this.onDissmiss}
+            >
+              {message}
+            </Alert>
+          )}
           <Row>
             <Col xl="4">
               <Option

@@ -5,6 +5,8 @@
     margin-bottom: 0;
     border: none;
     border-bottom: 1px solid white;
+    justify-content: center;
+    align-items: center;
 }
 
 .avatar > img {

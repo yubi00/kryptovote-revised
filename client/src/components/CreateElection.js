@@ -48,8 +48,8 @@ class CreateElection extends Component {
         )
         .send({
           from: accounts[0],
-          gas: 500000,
-          gasPrice: web3.utils.toWei('60', 'gwei')
+          gas: 4000000,
+          gasPrice: web3.utils.toWei('20', 'gwei')
         })
       const votingDeadline = await instance.methods.getVotingDeadline().call()
       const electionName = await instance.methods.getElectionName().call()
