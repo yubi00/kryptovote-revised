@@ -15,7 +15,7 @@ export class Voter extends Component {
     return (
       <Container className="mb-5">
         {voters.length === 0 ? (
-          <h2>No voters yet</h2>
+          <h2 className="text-dark p-5 text-center">No voters found yet</h2>
         ) : (
           <ListGroup>
             <h3 className="mb-0 bg-info text-white p-3">{`Total number of voters:  ${voters.length} `}</h3>

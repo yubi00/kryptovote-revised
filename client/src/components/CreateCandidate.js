@@ -13,6 +13,7 @@ import {
 import { addCandidate } from '../actions/candidates'
 import { history } from '../routers/history'
 import Loader from './Loader'
+import '../styles/Candidate.css'
 
 export class CreateCandidate extends Component {
   state = {
@@ -126,7 +127,7 @@ export class CreateCandidate extends Component {
               name="image"
               accept=".jpg, .png, .jpeg"
               onChange={this.handleFileChange}
-              className="mb-3"
+              className="mb-3 file-input"
             />
             <Button disabled={disabled}>{loading ? <Loader /> : 'Save'}</Button>
           </FormGroup>

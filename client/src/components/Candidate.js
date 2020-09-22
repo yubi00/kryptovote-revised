@@ -10,12 +10,12 @@ function Candidate({ candidate, location, selectedOption, setValue }) {
   return (
     <div className="candidate">
       <div className="avatar">
-        <img src={candidate.partysymbol} alt="" height="75"></img>
+        <img src={candidate.partysymbol} alt="" height="60"></img>
       </div>
       <div className="candidate-list">
         <div className="candidate-info">
-          <h1>{candidate.candidatename}</h1>
-          <h4>{candidate.partyname}</h4>
+          <h2 className="text-dark">{candidate.candidatename}</h2>
+          <h4 className="text-secondary">{candidate.partyname}</h4>
         </div>
 
         {location.pathname === '/vote' && (

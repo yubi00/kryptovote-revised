@@ -6,6 +6,15 @@ import { resetVoters } from '../actions/voters'
 import { resetCandidates } from '../actions/candidates'
 import { Redirect } from 'react-router-dom'
 import Loader from './Loader'
+import {
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Alert,
+  Button
+} from 'reactstrap'
 
 class CreateElection extends Component {
   state = {
@@ -15,7 +24,8 @@ class CreateElection extends Component {
     message: '',
     toElection: false,
     loading: false,
-    disabled: false
+    disabled: false,
+    visible: false
   }
 
   handleSubmit = async (e) => {
@@ -34,8 +44,9 @@ class CreateElection extends Component {
     //create an election and store in the blockchain
     const { title, duration, description } = this.state
     if (!title || !duration) {
+      this.setState({ visible: true })
       return this.setState({
-        message: 'Please provide both title and duration'
+        message: 'Title and duration are both required'
       })
     }
     try {
@@ -67,17 +78,24 @@ class CreateElection extends Component {
     } catch (error) {
       this.setState({ loading: false })
       this.setState({ disabled: false })
-      alert(error.message)
+      this.setState({ message: error.message })
+      this.setState({ visible: true })
     }
   }
 
   onChange = (e) => {
+    this.setState({ disabled: false })
     this.setState({ message: '' })
     const value = e.target.value
     const name = e.target.name
     this.setState({
       [name]: value
     })
+  }
+
+  onDissmiss = () => {
+    this.setState({ visible: false })
+    this.setState({ message: null })
   }
 
   render() {
@@ -88,43 +106,51 @@ class CreateElection extends Component {
       message,
       toElection,
       loading,
-      disabled
+      disabled,
+      visible
     } = this.state
 
     if (toElection) return <Redirect to="/election" />
 
     return (
-      <div>
-        <h1>Add Election</h1>
-        {message && <h2>{message}</h2>}
-        <form onSubmit={this.handleSubmit}>
-          <label>Title</label>
-          <input
-            type="text"
-            placeholder="election title"
-            name="title"
-            value={title}
-            onChange={this.onChange}
-          />
-          <label>Description</label>
-          <textarea
-            placeholder="Description about the election"
-            name="description"
-            value={description}
-            onChange={this.onChange}
-          ></textarea>
-          <label>Duration</label>
-          <input
-            type="text"
-            name="duration"
-            placeholder="Duration of election in minutes "
-            onChange={this.onChange}
-            value={duration}
-          ></input>
-          <button disabled={disabled}>Save</button>
-          <div>{loading && <Loader />}</div>
-        </form>
-      </div>
+      <Container className="mb-5">
+        {message && (
+          <Alert color="danger" isOpen={visible} toggle={this.onDissmiss}>
+            {message}
+          </Alert>
+        )}
+        <Form onSubmit={this.handleSubmit} className="border p-5">
+          <FormGroup>
+            <Label>Title</Label>
+            <Input
+              type="text"
+              placeholder="election title"
+              name="title"
+              value={title}
+              onChange={this.onChange}
+              className="mb-3"
+            />
+            <Label>Description</Label>
+            <Input
+              placeholder="Description about the election"
+              name="description"
+              value={description}
+              onChange={this.onChange}
+              className="mb-3"
+            ></Input>
+            <label>Duration</label>
+            <Input
+              type="text"
+              name="duration"
+              placeholder="Duration of election in minutes "
+              onChange={this.onChange}
+              value={duration}
+              className="mb-3"
+            ></Input>
+            <Button disabled={disabled}>{loading ? <Loader /> : 'Save'}</Button>
+          </FormGroup>
+        </Form>
+      </Container>
     )
   }
 }

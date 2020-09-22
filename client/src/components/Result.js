@@ -20,7 +20,7 @@ export class Result extends Component {
     return (
       <Container className="mb-5">
         {results.winnerName && (
-          <h1 className="election-title">{`Congrats ${results.winnerName}`}</h1>
+          <h1 className="election-title mb-0">{`Congrats ${results.winnerName}`}</h1>
         )}
         {results.candidates &&
           results.candidates.map((candidate, i) => (
