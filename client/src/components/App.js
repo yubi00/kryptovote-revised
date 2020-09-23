@@ -55,9 +55,9 @@ export class App extends Component {
     const { message, visible } = this.state
     if (!web3 || !instance)
       return (
-        <Container className="text-center text-dark d-flex flex-column justify-content-center align-items-center mb-5 p-5">
+        <Container className="text-center text-dark d-flex flex-column justify-content-center align-items-center mb-5 p-5 h3">
           <Loader />
-          <div>Loading web3 abd contract instance...</div>
+          <div>Loading web3 and contract instance...</div>
         </Container>
       )
     return (
