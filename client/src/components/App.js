@@ -4,6 +4,7 @@ import { history } from '../routers/history'
 import moment from 'moment'
 import '../styles/App.css'
 import { Container, Row, Col, Alert } from 'reactstrap'
+import Loader from './Loader'
 import Option from './Option'
 import '../styles/App.css'
 
@@ -53,7 +54,12 @@ export class App extends Component {
     const { isAuthenticated, web3, instance } = this.props
     const { message, visible } = this.state
     if (!web3 || !instance)
-      return <div>Loading web3, accounts and contract instance...</div>
+      return (
+        <Container className="text-center text-dark d-flex flex-column justify-content-center align-items-center mb-5 p-5">
+          <Loader />
+          <div>Loading web3 abd contract instance...</div>
+        </Container>
+      )
     return (
       <div>
         <Container>
