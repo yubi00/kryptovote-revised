@@ -8,6 +8,7 @@ import '../styles/Counter.css'
 
 export class Counter extends Component {
   state = {
+    days: null,
     hours: null,
     minutes: null,
     seconds: null,
@@ -20,43 +21,29 @@ export class Counter extends Component {
   setCounter = () => {
     setInterval(() => {
       this.getTimeLeft()
-      const { minutes, hours, seconds } = this.state
-      if (hours === 0 && minutes === 0 && seconds === 0) {
-        this.setState({ status: 'VOTING PERIOD ENDED' })
-        this.setState({ hour: null, minutes: null, seconds: null })
-        this.props.endElection()
-      } else if (seconds === 0 && minutes !== 0) {
-        this.setState((prevState) => {
-          return { minutes: prevState.minutes - 1, seconds: 60 }
-        })
-      } else if (minutes === 0 && hours !== 0) {
-        this.setState((prevState) => {
-          return { hours: prevState.hours - 1, minutes: 59, seconds: 60 }
-        })
-      }
-
-      this.setState((prevState) => {
-        return { seconds: prevState.seconds - 1 }
-      })
     }, 1000)
   }
 
   getTimeLeft = async () => {
     const { instance } = this.props
     try {
-      const votingDeadline = await instance.methods.getVotingDeadline().call()
-      const currentTime = moment()
-      const votingEndTime = moment.unix(votingDeadline)
-      const difference = votingEndTime.diff(currentTime, 'seconds')
+      const votingEndTime = await instance.methods.getVotingDeadline().call()
+      const currentTime = moment().unix()
 
-      if (difference > 0) {
-        const hours = votingEndTime.diff(currentTime, 'hours')
-        const minutes = votingEndTime.diff(currentTime, 'minutes') - hours * 60
-        const seconds =
-          votingEndTime.diff(currentTime, 'seconds') -
-          (hours * 60 * 60 + minutes * 60)
+      const totalSeconds = Math.floor(votingEndTime - currentTime)
 
-        this.setState({ hours, minutes, seconds })
+      const days = Math.floor(totalSeconds / 3600 / 24)
+      const hours = Math.floor(totalSeconds / 3600) % 24
+      const minutes = Math.floor(totalSeconds / 60) % 60
+      const seconds = Math.floor(totalSeconds) % 60
+
+      if (totalSeconds > 0) {
+        this.setState({
+          days,
+          hours: this.formatTime(hours),
+          minutes: this.formatTime(minutes),
+          seconds: this.formatTime(seconds)
+        })
       } else {
         this.setState({ status: 'VOTING PERIOD ENDED' })
       }
@@ -65,15 +52,26 @@ export class Counter extends Component {
     }
   }
 
+  formatTime = (time) => {
+    return time < 10 ? `0${time}` : time
+  }
+
   render() {
-    const { hours, minutes, seconds, status } = this.state
+    const { days, hours, minutes, seconds, status } = this.state
     return (
       <Container fluid className="mb-5 text-center bg-light p-5 text-dark">
         {hours !== null && minutes !== null && seconds !== null ? (
           <div className="counter">
-            <CounterCard type={hours} title="Hours" />
-            <CounterCard type={minutes} title="Minutes" />
-            <CounterCard type={seconds} title="Seconds" />
+            <CounterCard type={days} title={days > 1 ? 'Days' : 'Day'} />
+            <CounterCard type={hours} title={hours > 1 ? 'Hours' : 'Hour'} />
+            <CounterCard
+              type={minutes}
+              title={minutes > 1 ? 'Minutes' : 'Minute'}
+            />
+            <CounterCard
+              type={seconds}
+              title={seconds > 1 ? 'Seconds' : 'Second'}
+            />
           </div>
         ) : (
           <h1 className="text-dark">{status} </h1>
