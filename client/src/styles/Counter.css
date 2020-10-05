@@ -1,27 +1,43 @@
 .counter {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 10px;
- }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 
 .counter-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 5px;
-    padding: 10px;
-    border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.countercard-type {
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+.countercard-title {
+  font-size: medium;
 }
 
 @media screen and (max-width: 400px) {
-    .counter {
-        padding: 4px;
-    }
+  .counter {
+    padding: 4px;
+    justify-content: center;
+  }
 
-    .counter-card {
-        margin: 5px 5px;
-        padding: 5px;
-    }
+  .counter-card {
+    padding: 5px;
+    min-width: 3.5rem;
+  }
+
+  .countercard-type {
+    font-size: medium;
+  }
+
+  .countercard-title {
+    font-size: small;
+  }
 }

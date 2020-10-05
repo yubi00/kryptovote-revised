@@ -3,9 +3,11 @@ import '../styles/Counter.css'
 
 function CounterCard({ type, title }) {
   return (
-    <div className="counter-card bg-info">
-      <div className="h3 text-white mb-1 p-1">{type}</div>
-      <p className="h4 text-light p-1">{title}</p>
+    <div className='counter-card'>
+      <div className='text-white bg-info mb-1 mr-2  p-3 countercard-type'>
+        {type}
+      </div>
+      <p className='text-secondary p-1  countercard-title'>{title}</p>
     </div>
   )
 }

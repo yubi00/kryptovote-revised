@@ -21,13 +21,15 @@ function Option({
 }) {
   return (
     <div>
-      <Card className="mb-5 pb-2 card-option h-100 shadow option-card">
-        <CardImg top src={img} alt="Card image cap" />
+      <Card className='mb-5 pb-2 card-option h-100 shadow option-card'>
+        <CardImg top src={img} alt='Card image cap' />
         <CardBody>
-          <CardTitle>{title}</CardTitle>
-          <CardSubtitle>{subtitle}</CardSubtitle>
-          <CardText>{text}</CardText>
-          <Button color="secondary" onClick={handleClick} disabled={disabled}>
+          <CardTitle className='option-title'>{title}</CardTitle>
+          <CardSubtitle className='option-subtitle mb-2'>
+            {subtitle}
+          </CardSubtitle>
+          <CardText className='option-desc'>{text}</CardText>
+          <Button color='secondary' onClick={handleClick} disabled={disabled}>
             {buttonLabel}
           </Button>
         </CardBody>

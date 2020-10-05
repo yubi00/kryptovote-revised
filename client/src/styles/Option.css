@@ -1,7 +1,17 @@
 .option-card {
-    transition: trasform 100ms ease-in;
+  transition: trasform 100ms ease-in;
 }
 
 .option-card:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
+}
+
+.option-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.option-subtitle {
+  font-size: 1rem;
+  color: #555;
 }
